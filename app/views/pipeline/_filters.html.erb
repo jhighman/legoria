@@ -1,0 +1,57 @@
+<div class="card mb-4">
+  <div class="card-body py-2">
+    <%= form_with url: job_pipeline_path(@job), method: :get, data: { turbo_frame: "_top" } do |f| %>
+      <div class="row g-2 align-items-center">
+        <div class="col-auto">
+          <label class="col-form-label text-muted small">Filters:</label>
+        </div>
+        <div class="col-md-2">
+          <%= select_tag :source,
+              options_for_select(
+                LookupService.values_for_select("application_source", organization: @job.organization),
+                params[:source]
+              ),
+              include_blank: "All Sources",
+              class: "form-select form-select-sm",
+              onchange: "this.form.requestSubmit()" %>
+        </div>
+        <div class="col-md-2">
+          <%= select_tag :rating,
+              options_for_select((1..5).map { |r| ["#{r} Star#{'s' if r > 1}", r] }, params[:rating]),
+              include_blank: "Any Rating",
+              class: "form-select form-select-sm",
+              onchange: "this.form.requestSubmit()" %>
+        </div>
+        <div class="col-auto">
+          <div class="form-check">
+            <%= check_box_tag :starred, "true", params[:starred] == "true",
+                class: "form-check-input",
+                onchange: "this.form.requestSubmit()" %>
+            <%= label_tag :starred, class: "form-check-label small" do %>
+              <i class="bi bi-star-fill text-warning"></i> Starred only
+            <% end %>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <%= date_field_tag :applied_after, params[:applied_after],
+              class: "form-control form-control-sm",
+              placeholder: "From date",
+              onchange: "this.form.requestSubmit()" %>
+        </div>
+        <div class="col-md-2">
+          <%= date_field_tag :applied_before, params[:applied_before],
+              class: "form-control form-control-sm",
+              placeholder: "To date",
+              onchange: "this.form.requestSubmit()" %>
+        </div>
+        <% if params[:source].present? || params[:rating].present? || params[:starred].present? || params[:applied_after].present? || params[:applied_before].present? %>
+          <div class="col-auto">
+            <%= link_to job_pipeline_path(@job), class: "btn btn-sm btn-outline-secondary" do %>
+              <i class="bi bi-x"></i> Clear
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

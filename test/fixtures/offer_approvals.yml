@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+pending_approval:
+  offer: pending_approval_offer
+  approver: hiring_manager
+  sequence: 1
+  status: pending
+  requested_at: <%= 1.day.ago %>
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+approved_approval:
+  offer: sent_offer
+  approver: hiring_manager
+  sequence: 1
+  status: approved
+  comments: Looks good, approved!
+  requested_at: <%= 5.days.ago %>
+  responded_at: <%= 4.days.ago %>
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 4.days.ago %>

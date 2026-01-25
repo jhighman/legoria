@@ -1,0 +1,53 @@
+# frozen_string_literal: true
+
+candidate_data_policy:
+  organization: acme
+  name: Candidate Data Retention
+  description: Retain candidate personal data for 2 years after application closure
+  data_category: candidate_data
+  retention_days: 730
+  retention_trigger: application_closed
+  action_type: anonymize
+  notify_candidate: true
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+application_data_policy:
+  organization: acme
+  name: Application Data Retention
+  description: Retain application data for 3 years
+  data_category: application_data
+  retention_days: 1095
+  retention_trigger: application_closed
+  action_type: archive
+  notify_candidate: false
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+eeoc_data_policy:
+  organization: acme
+  name: EEOC Data Retention
+  description: Retain EEOC data for 4 years as required by law
+  data_category: eeoc_data
+  retention_days: 1460
+  retention_trigger: application_closed
+  action_type: delete
+  notify_candidate: false
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_policy:
+  organization: acme
+  name: Old Policy
+  description: No longer active
+  data_category: interview_data
+  retention_days: 365
+  retention_trigger: hired
+  action_type: delete
+  notify_candidate: false
+  active: false
+  created_at: <%= 60.days.ago %>
+  updated_at: <%= 30.days.ago %>

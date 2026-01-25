@@ -1,0 +1,89 @@
+# frozen_string_literal: true
+
+# Acme organization lookup types
+acme_employment_type:
+  organization: acme
+  code: employment_type
+  name: Employment Type
+  description: Types of employment arrangements
+  system_managed: true
+  active: true
+
+acme_location_type:
+  organization: acme
+  code: location_type
+  name: Location Type
+  description: Work location arrangements
+  system_managed: true
+  active: true
+
+acme_application_source:
+  organization: acme
+  code: application_source
+  name: Application Source
+  description: How candidates found the job
+  system_managed: true
+  active: true
+
+acme_note_visibility:
+  organization: acme
+  code: note_visibility
+  name: Note Visibility
+  description: Who can see candidate notes
+  system_managed: true
+  active: true
+
+# Globex organization lookup types
+globex_employment_type:
+  organization: globex
+  code: employment_type
+  name: Employment Type
+  description: Types of employment arrangements
+  system_managed: true
+  active: true
+
+globex_location_type:
+  organization: globex
+  code: location_type
+  name: Location Type
+  description: Work location arrangements
+  system_managed: true
+  active: true
+
+globex_application_source:
+  organization: globex
+  code: application_source
+  name: Application Source
+  description: How candidates found the job
+  system_managed: true
+  active: true
+
+globex_note_visibility:
+  organization: globex
+  code: note_visibility
+  name: Note Visibility
+  description: Who can see candidate notes
+  system_managed: true
+  active: true
+
+# Inactive org lookup types (minimal)
+inactive_employment_type:
+  organization: inactive_org
+  code: employment_type
+  name: Employment Type
+  system_managed: true
+  active: true
+
+inactive_location_type:
+  organization: inactive_org
+  code: location_type
+  name: Location Type
+  system_managed: true
+  active: true
+
+inactive_application_source:
+  organization: inactive_org
+  code: application_source
+  name: Application Source
+  system_managed: true
+  active: true

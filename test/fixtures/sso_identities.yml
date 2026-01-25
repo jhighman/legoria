@@ -1,0 +1,22 @@
+# SA-01: SSO identity fixtures
+
+admin_saml_identity:
+  user: admin
+  sso_config: acme_saml
+  provider_uid: admin@acme.example.com
+  provider_data: '{"email": "admin@acme.example.com", "groups": ["admins", "hr"]}'
+  last_used_at: <%= 1.hour.ago %>
+
+recruiter_saml_identity:
+  user: recruiter
+  sso_config: globex_saml
+  provider_uid: recruiter@globex.example.com
+  provider_data: '{"email": "recruiter@globex.example.com"}'
+  last_used_at: <%= 1.day.ago %>
+
+stale_identity:
+  user: admin
+  sso_config: acme_oidc
+  provider_uid: "12345678901234567890"
+  provider_data: '{"email": "admin@gmail.com"}'
+  last_used_at: <%= 100.days.ago %>

@@ -1,0 +1,63 @@
+# frozen_string_literal: true
+
+# Job stages link jobs to their stages in the pipeline
+
+open_job_applied:
+  job: open_job
+  stage: applied
+  position: 0
+
+open_job_screening:
+  job: open_job
+  stage: screening
+  position: 1
+
+open_job_interview:
+  job: open_job
+  stage: interview
+  position: 2
+
+open_job_offer:
+  job: open_job
+  stage: offer
+  position: 3
+
+open_job_hired:
+  job: open_job
+  stage: hired
+  position: 4
+
+open_job_rejected:
+  job: open_job
+  stage: rejected
+  position: 5
+
+draft_job_applied:
+  job: draft_job
+  stage: applied
+  position: 0
+
+draft_job_screening:
+  job: draft_job
+  stage: screening
+  position: 1
+
+draft_job_interview:
+  job: draft_job
+  stage: interview
+  position: 2
+
+draft_job_offer:
+  job: draft_job
+  stage: offer
+  position: 3
+
+draft_job_hired:
+  job: draft_job
+  stage: hired
+  position: 4
+
+draft_job_rejected:
+  job: draft_job
+  stage: rejected
+  position: 5

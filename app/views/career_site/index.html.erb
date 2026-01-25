@@ -1,0 +1,158 @@
+<% content_for(:title) { "Open Positions" } %>
+<% content_for(:description) { "Browse our current job openings and find your next career opportunity." } %>
+
+<!-- Hero Section -->
+<section class="career-hero">
+  <div class="container text-center">
+    <h1 class="display-4 fw-bold mb-3">Join Our Team</h1>
+    <p class="lead mb-4">Discover exciting career opportunities and be part of something great.</p>
+
+    <!-- Search -->
+    <%= form_with url: careers_path, method: :get, local: true, class: "row g-2 justify-content-center" do %>
+      <div class="col-md-6">
+        <div class="input-group input-group-lg">
+          <%= text_field_tag :q, params[:q], class: "form-control", placeholder: "Search jobs by title..." %>
+          <button type="submit" class="btn btn-light">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<div class="container py-5">
+  <div class="row">
+    <!-- Filters Sidebar -->
+    <div class="col-lg-3 mb-4">
+      <div class="card">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-funnel me-2"></i>Filters
+          </h5>
+        </div>
+        <div class="card-body">
+          <%= form_with url: careers_path, method: :get, local: true do %>
+            <!-- Preserve search query -->
+            <%= hidden_field_tag :q, params[:q] if params[:q].present? %>
+
+            <div class="mb-3">
+              <label class="form-label fw-medium">Department</label>
+              <%= select_tag :department,
+                  options_for_select([["All Departments", ""]] + @departments.map { |d| [d.name, d.id] }, params[:department]),
+                  class: "form-select form-select-sm" %>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-medium">Location</label>
+              <%= select_tag :location_type,
+                  options_for_select([["All Locations", ""]] + @location_types.map { |v| [v[:label], v[:code]] }, params[:location_type]),
+                  class: "form-select form-select-sm" %>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-medium">Job Type</label>
+              <%= select_tag :employment_type,
+                  options_for_select([["All Types", ""]] + @employment_types.map { |v| [v[:label], v[:code]] }, params[:employment_type]),
+                  class: "form-select form-select-sm" %>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= submit_tag "Apply Filters", class: "btn btn-primary btn-sm" %>
+              <%= link_to "Clear All", careers_path, class: "btn btn-outline-secondary btn-sm" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Listings -->
+    <div class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0">
+          <% if params[:q].present? %>
+            Results for "<%= params[:q] %>"
+          <% else %>
+            Open Positions
+          <% end %>
+        </h2>
+        <span class="text-muted"><%= @jobs.count %> <%= "job".pluralize(@jobs.count) %> available</span>
+      </div>
+
+      <% if @jobs.any? %>
+        <div class="row g-4">
+          <% @jobs.each do |job| %>
+            <div class="col-12">
+              <%= link_to career_path(job), class: "text-decoration-none" do %>
+                <div class="card job-card h-100">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h5 class="card-title text-dark mb-2"><%= job.title %></h5>
+                        <div class="mb-2">
+                          <% if job.department %>
+                            <span class="badge bg-light text-dark me-2">
+                              <i class="bi bi-building me-1"></i><%= job.department.name %>
+                            </span>
+                          <% end %>
+                          <span class="badge badge-location me-2">
+                            <i class="bi bi-geo-alt me-1"></i><%= job.location_type_display %>
+                          </span>
+                          <span class="badge badge-employment">
+                            <i class="bi bi-briefcase me-1"></i><%= job.employment_type_display %>
+                          </span>
+                        </div>
+                        <% if job.location.present? %>
+                          <p class="text-muted small mb-2">
+                            <i class="bi bi-pin-map me-1"></i><%= job.location %>
+                          </p>
+                        <% end %>
+                        <% if job.description.present? %>
+                          <p class="text-muted mb-0"><%= truncate(strip_tags(job.description), length: 200) %></p>
+                        <% end %>
+                      </div>
+                      <div class="text-end">
+                        <span class="text-primary">
+                          View Details <i class="bi bi-arrow-right"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer bg-white border-top-0">
+                    <small class="text-muted">
+                      Posted <%= time_ago_in_words(job.created_at) %> ago
+                    </small>
+                    <% if job.salary_min.present? || job.salary_max.present? %>
+                      <span class="float-end text-muted small">
+                        <i class="bi bi-currency-dollar"></i>
+                        <% if job.salary_min.present? && job.salary_max.present? %>
+                          <%= number_to_currency(job.salary_min, precision: 0) %> - <%= number_to_currency(job.salary_max, precision: 0) %>
+                        <% elsif job.salary_min.present? %>
+                          From <%= number_to_currency(job.salary_min, precision: 0) %>
+                        <% else %>
+                          Up to <%= number_to_currency(job.salary_max, precision: 0) %>
+                        <% end %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-5">
+          <i class="bi bi-briefcase fs-1 text-muted mb-3 d-block"></i>
+          <h4>No open positions found</h4>
+          <p class="text-muted">
+            <% if params[:q].present? || params[:department].present? || params[:location_type].present? || params[:employment_type].present? %>
+              Try adjusting your filters or <%= link_to "view all jobs", careers_path %>.
+            <% else %>
+              Check back later for new opportunities.
+            <% end %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

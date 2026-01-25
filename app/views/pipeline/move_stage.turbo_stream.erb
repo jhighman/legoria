@@ -1,0 +1,13 @@
+<%# Update the application card with new stage info %>
+<%= turbo_stream.replace dom_id(@application) do %>
+  <%= render "pipeline/application_card", application: @application.reload, job: @job %>
+<% end %>
+
+<%# Update column counts %>
+<%= turbo_stream.update "stage-count-#{@from_stage.id}" do %>
+  <%= @job.applications.kept.where(current_stage_id: @from_stage.id).count %>
+<% end %>
+
+<%= turbo_stream.update "stage-count-#{@to_stage.id}" do %>
+  <%= @job.applications.kept.where(current_stage_id: @to_stage.id).count %>
+<% end %>

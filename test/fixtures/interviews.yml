@@ -1,0 +1,65 @@
+# frozen_string_literal: true
+
+scheduled_interview:
+  organization: acme
+  application: active_application
+  job: open_job
+  scheduled_by: recruiter
+  interview_type: video
+  status: scheduled
+  title: Technical Interview - John Doe
+  scheduled_at: <%= 3.days.from_now %>
+  duration_minutes: 60
+  timezone: UTC
+  location:
+  video_meeting_url: https://meet.example.com/interview123
+  instructions: Please have your resume ready to discuss.
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+confirmed_interview:
+  organization: acme
+  application: active_application
+  job: open_job
+  scheduled_by: recruiter
+  interview_type: onsite
+  status: confirmed
+  title: On-site Interview - John Doe
+  scheduled_at: <%= 5.days.from_now %>
+  duration_minutes: 90
+  timezone: UTC
+  location: 123 Main St, Suite 100
+  confirmed_at: <%= 1.day.ago %>
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+completed_interview:
+  organization: acme
+  application: active_application
+  job: open_job
+  scheduled_by: recruiter
+  interview_type: phone_screen
+  status: completed
+  title: Phone Screen - John Doe
+  scheduled_at: <%= 2.days.ago %>
+  duration_minutes: 30
+  timezone: UTC
+  completed_at: <%= 2.days.ago %>
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+cancelled_interview:
+  organization: acme
+  application: active_application
+  job: open_job
+  scheduled_by: recruiter
+  interview_type: video
+  status: cancelled
+  title: Cancelled Interview
+  scheduled_at: <%= 1.day.ago %>
+  duration_minutes: 45
+  timezone: UTC
+  cancelled_at: <%= 2.days.ago %>
+  cancellation_reason: Position filled
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 2.days.ago %>

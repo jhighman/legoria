@@ -1,0 +1,51 @@
+# frozen_string_literal: true
+
+lead_participant:
+  interview: scheduled_interview
+  user: hiring_manager
+  role: lead
+  status: accepted
+  responded_at: <%= 1.day.ago %>
+  feedback_submitted: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+interviewer_participant:
+  interview: scheduled_interview
+  user: recruiter
+  role: interviewer
+  status: pending
+  feedback_submitted: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+completed_lead:
+  interview: completed_interview
+  user: hiring_manager
+  role: lead
+  status: accepted
+  responded_at: <%= 3.days.ago %>
+  feedback_submitted: true
+  feedback_submitted_at: <%= 1.day.ago %>
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+completed_interviewer:
+  interview: completed_interview
+  user: recruiter
+  role: interviewer
+  status: accepted
+  responded_at: <%= 3.days.ago %>
+  feedback_submitted: false
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+shadow_participant:
+  interview: confirmed_interview
+  user: inactive_user
+  role: shadow
+  status: accepted
+  responded_at: <%= 1.day.ago %>
+  feedback_submitted: false
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 1.day.ago %>

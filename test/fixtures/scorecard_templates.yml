@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+default_template:
+  organization: acme
+  name: General Interview Template
+  description: Standard template for all interviews
+  active: true
+  is_default: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+technical_template:
+  organization: acme
+  name: Technical Interview Template
+  description: For technical interviews
+  interview_type: technical
+  active: true
+  is_default: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+job_specific_template:
+  organization: acme
+  job: open_job
+  name: Product Manager Interview
+  active: true
+  is_default: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_template:
+  organization: acme
+  name: Old Template
+  active: false
+  is_default: false
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 30.days.ago %>

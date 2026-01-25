@@ -1,0 +1,117 @@
+<% content_for :title, "I-9 Verification Status" %>
+
+<div class="container py-4">
+  <h1 class="h3 mb-4">I-9 Employment Eligibility Verification</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Verification Status</h5>
+    </div>
+    <div class="card-body">
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <p class="mb-1"><strong>Job:</strong> <%= @i9_verification.application.job.title %></p>
+          <p class="mb-1"><strong>Start Date:</strong> <%= @i9_verification.employee_start_date&.strftime("%B %d, %Y") || "Not set" %></p>
+        </div>
+        <div class="col-md-6">
+          <p class="mb-1"><strong>Status:</strong>
+            <span class="badge bg-<%= i9_status_color(@i9_verification.status) %>">
+              <%= @i9_verification.status.titleize.gsub("_", " ") %>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Progress Steps -->
+      <div class="progress-steps mb-4">
+        <div class="d-flex justify-content-between">
+          <div class="text-center">
+            <div class="step-circle <%= @i9_verification.section1_completed_at ? 'completed' : (@i9_verification.pending_section1? ? 'active' : '') %>">1</div>
+            <small class="d-block mt-2">Section 1<br><span class="text-muted">Employee Info</span></small>
+          </div>
+          <div class="text-center">
+            <div class="step-circle <%= @i9_verification.section2_completed_at ? 'completed' : (@i9_verification.status.in?(%w[section1_complete pending_section2]) ? 'active' : '') %>">2</div>
+            <small class="d-block mt-2">Section 2<br><span class="text-muted">Employer Review</span></small>
+          </div>
+          <div class="text-center">
+            <div class="step-circle <%= @i9_verification.verified? ? 'completed' : '' %>">3</div>
+            <small class="d-block mt-2">Verified<br><span class="text-muted">Complete</span></small>
+          </div>
+        </div>
+      </div>
+
+      <% if @i9_verification.pending_section1? %>
+        <div class="alert alert-info">
+          <h5 class="alert-heading">Action Required</h5>
+          <p class="mb-0">Please complete Section 1 of your I-9 form before your start date.</p>
+          <%= link_to "Complete Section 1", section1_candidate_portal_i9_verification_path(@i9_verification), class: "btn btn-primary mt-2" %>
+        </div>
+      <% elsif @i9_verification.section1_complete? || @i9_verification.pending_section2? %>
+        <div class="alert alert-success">
+          <h5 class="alert-heading">Section 1 Complete</h5>
+          <p class="mb-0">Your employer will complete Section 2 within 3 business days of your start date.</p>
+        </div>
+      <% elsif @i9_verification.verified? %>
+        <div class="alert alert-success">
+          <h5 class="alert-heading">Verification Complete</h5>
+          <p class="mb-0">Your I-9 verification has been completed successfully.</p>
+        </div>
+      <% end %>
+
+      <!-- Section 1 Details (if completed) -->
+      <% if @i9_verification.section1_completed_at %>
+        <h6 class="mt-4">Section 1 Details</h6>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <tr>
+              <th>Completed:</th>
+              <td><%= @i9_verification.section1_completed_at.strftime("%B %d, %Y at %I:%M %p") %></td>
+            </tr>
+            <tr>
+              <th>Citizenship Status:</th>
+              <td><%= @i9_verification.citizenship_status&.titleize&.gsub("_", " ") %></td>
+            </tr>
+          </table>
+        </div>
+      <% end %>
+
+      <!-- Section 2 Details (if completed) -->
+      <% if @i9_verification.section2_completed_at %>
+        <h6 class="mt-4">Section 2 Details</h6>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <tr>
+              <th>Completed:</th>
+              <td><%= @i9_verification.section2_completed_at.strftime("%B %d, %Y at %I:%M %p") %></td>
+            </tr>
+            <tr>
+              <th>Completed By:</th>
+              <td><%= @i9_verification.section2_completed_by&.full_name %></td>
+            </tr>
+          </table>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  .step-circle.active {
+    background-color: #0d6efd;
+    color: white;
+  }
+  .step-circle.completed {
+    background-color: #198754;
+    color: white;
+  }
+</style>

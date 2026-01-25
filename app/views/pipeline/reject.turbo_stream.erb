@@ -1,0 +1,11 @@
+<%# Remove the rejected application card from the pipeline %>
+<%= turbo_stream.remove dom_id(@application) %>
+
+<%# Show success message %>
+<%= turbo_stream.prepend "flash-messages" do %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle me-2"></i>
+    Candidate has been rejected.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% end %>

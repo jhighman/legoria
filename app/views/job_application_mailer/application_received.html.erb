@@ -1,0 +1,68 @@
+<h1>Thank You for Applying!</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>
+  Thank you for your interest in the <strong><%= @job.title %></strong> position at
+  <strong><%= @organization.name %></strong>. We have received your application and
+  our recruiting team will review it shortly.
+</p>
+
+<h2>What's Next?</h2>
+
+<p>
+  Our team will carefully review your application and qualifications. If your background
+  matches our requirements, we will reach out to schedule the next steps in our interview process.
+</p>
+
+<h2>Track Your Application</h2>
+
+<p>
+  You can check the status of your application at any time using the link below:
+</p>
+
+<p style="margin: 20px 0;">
+  <%= link_to "View Application Status", @status_url, style: "background-color: #0d6efd; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;" %>
+</p>
+
+<p>
+  <strong>Your tracking code:</strong> <code><%= @application.tracking_token %></code>
+</p>
+
+<p>
+  Save this code - you can use it to check your status at any time by visiting our
+  <%= link_to "application status page", application_status_url %>.
+</p>
+
+<h2>Application Details</h2>
+
+<table style="width: 100%; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Position:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @job.title %></td>
+  </tr>
+  <% if @job.department %>
+    <tr>
+      <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Department:</strong></td>
+      <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @job.department.name %></td>
+    </tr>
+  <% end %>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Location:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @job.location.presence || @job.location_type_display %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Applied:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @application.applied_at.strftime("%B %d, %Y") %></td>
+  </tr>
+</table>
+
+<p style="margin-top: 30px;">
+  Thank you for considering a career with <%= @organization.name %>. We appreciate your interest
+  and will be in touch soon.
+</p>
+
+<p>
+  Best regards,<br>
+  The <%= @organization.name %> Recruiting Team
+</p>

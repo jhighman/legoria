@@ -1,0 +1,7 @@
+<%= yield %>
+
+---
+<%= @branding&.email_footer_text.presence || "Sent via #{PlatformBrand.name}" %>
+<% if @branding&.show_powered_by? != false %>
+<%= PlatformBrand.powered_by_text %>
+<% end %>

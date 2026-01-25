@@ -1,0 +1,59 @@
+# frozen_string_literal: true
+
+behavioral_question:
+  organization: acme
+  question: Tell me about a time when you had to deal with a difficult team member.
+  guidance: Look for conflict resolution skills and emotional intelligence.
+  question_type: behavioral
+  difficulty: medium
+  tags: teamwork,conflict,leadership
+  usage_count: 15
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+technical_question:
+  organization: acme
+  question: How would you design a scalable caching system?
+  guidance: Assess system design thinking and technical depth.
+  question_type: technical
+  difficulty: hard
+  tags: system_design,architecture
+  usage_count: 8
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+situational_question:
+  organization: acme
+  question: How would you handle a situation where you disagree with your manager's decision?
+  guidance: Evaluate communication skills and professional maturity.
+  question_type: situational
+  difficulty: medium
+  tags: communication,leadership
+  usage_count: 12
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+cultural_question:
+  organization: acme
+  question: What type of work environment helps you do your best work?
+  guidance: Assess cultural fit and self-awareness.
+  question_type: cultural
+  difficulty: easy
+  tags: culture,values
+  usage_count: 20
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_question:
+  organization: acme
+  question: This is an old question we no longer use.
+  question_type: behavioral
+  difficulty: easy
+  usage_count: 2
+  active: false
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 30.days.ago %>

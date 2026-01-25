@@ -1,0 +1,84 @@
+# frozen_string_literal: true
+
+draft_adverse_action:
+  organization: acme
+  application: active_application
+  initiated_by: recruiter
+  action_type: rejection
+  status: draft
+  reason_category: background_check
+  reason_details: Criminal record found during background check
+  background_check_provider: Checkr
+  waiting_period_days: 5
+  candidate_disputed: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+pre_adverse_sent:
+  organization: acme
+  application: new_application
+  initiated_by: recruiter
+  action_type: rejection
+  status: waiting_period
+  reason_category: credential_verification
+  reason_details: Education credentials could not be verified
+  waiting_period_days: 5
+  pre_adverse_sent_at: <%= 2.days.ago %>
+  pre_adverse_content: |
+    Dear Candidate,
+
+    We are writing to inform you that we have received information that may affect
+    our hiring decision. Specifically, we were unable to verify your education credentials.
+
+    You have 5 business days to dispute this information or provide additional documentation.
+  pre_adverse_delivery_method: email
+  waiting_period_ends_at: <%= 3.days.from_now %>
+  candidate_disputed: false
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+disputed_adverse_action:
+  organization: acme
+  application: active_application
+  initiated_by: recruiter
+  action_type: rejection
+  status: waiting_period
+  reason_category: reference_check
+  reason_details: Negative reference from previous employer
+  waiting_period_days: 5
+  pre_adverse_sent_at: <%= 4.days.ago %>
+  pre_adverse_content: Pre-adverse notice content
+  pre_adverse_delivery_method: email
+  waiting_period_ends_at: <%= 1.day.from_now %>
+  candidate_disputed: true
+  dispute_details: The reference provided is from a manager I had a personal conflict with. I can provide alternative references.
+  dispute_received_at: <%= 2.days.ago %>
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+completed_adverse_action:
+  organization: acme
+  application: rejected_application
+  initiated_by: recruiter
+  action_type: rejection
+  status: completed
+  reason_category: background_check
+  reason_details: Failed drug screening
+  background_check_provider: Sterling
+  waiting_period_days: 5
+  pre_adverse_sent_at: <%= 15.days.ago %>
+  pre_adverse_content: Pre-adverse notice
+  pre_adverse_delivery_method: email
+  waiting_period_ends_at: <%= 10.days.ago %>
+  final_adverse_sent_at: <%= 9.days.ago %>
+  final_adverse_content: |
+    Dear Candidate,
+
+    After careful consideration, we have decided not to proceed with your application
+    based on the results of your background check.
+
+    You have the right to obtain a copy of the consumer report and dispute its accuracy.
+  final_adverse_delivery_method: email
+  candidate_disputed: false
+  created_at: <%= 20.days.ago %>
+  updated_at: <%= 9.days.ago %>

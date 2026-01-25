@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+communication_response:
+  scorecard: submitted_scorecard
+  scorecard_template_item: communication_item
+  rating: 4
+  notes: Clear and articulate
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+teamwork_response:
+  scorecard: submitted_scorecard
+  scorecard_template_item: teamwork_item
+  rating: 5
+  notes: Great collaboration examples
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+leadership_response:
+  scorecard: submitted_scorecard
+  scorecard_template_item: leadership_question
+  text_value: Candidate described leading a cross-functional project that delivered on time and under budget.
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+culture_fit_response:
+  scorecard: submitted_scorecard
+  scorecard_template_item: culture_fit
+  yes_no_value: true
+  notes: Would fit well with the team
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

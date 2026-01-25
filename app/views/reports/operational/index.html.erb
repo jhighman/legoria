@@ -1,0 +1,185 @@
+<% content_for :title, "Operational Dashboard" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Operational Dashboard</h1>
+    <p class="text-muted mb-0">Recruiter productivity and requisition health metrics</p>
+  </div>
+  <div class="btn-group">
+    <%= link_to recruiter_productivity_reports_operational_index_path, class: "btn btn-outline-primary" do %>
+      <i class="bi bi-people me-1"></i> Productivity Detail
+    <% end %>
+    <%= link_to requisition_aging_reports_operational_index_path, class: "btn btn-outline-primary" do %>
+      <i class="bi bi-clock-history me-1"></i> Aging Detail
+    <% end %>
+  </div>
+</div>
+
+<%= render "reports/shared/date_range_filter", departments: @departments, show_filters: true %>
+
+<div class="row g-4 mb-4">
+  <!-- Productivity Summary -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Recruiter Productivity</h5>
+        <%= link_to recruiter_productivity_reports_operational_index_path, class: "btn btn-sm btn-outline-primary" do %>
+          View Details <i class="bi bi-arrow-right"></i>
+        <% end %>
+      </div>
+      <div class="card-body">
+        <div class="row text-center mb-4">
+          <div class="col">
+            <div class="h2 mb-0 text-primary"><%= @productivity[:summary][:total_hires] %></div>
+            <small class="text-muted">Total Hires</small>
+          </div>
+          <div class="col">
+            <div class="h2 mb-0 text-info"><%= @productivity[:summary][:total_interviews_scheduled] %></div>
+            <small class="text-muted">Interviews</small>
+          </div>
+          <div class="col">
+            <div class="h2 mb-0 text-success"><%= @productivity[:summary][:total_offers_made] %></div>
+            <small class="text-muted">Offers</small>
+          </div>
+        </div>
+
+        <!-- Top Recruiters -->
+        <h6>Top Performers</h6>
+        <% @productivity[:by_recruiter].first(5).each do |recruiter| %>
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div>
+              <strong><%= recruiter[:recruiter_name] %></strong>
+              <br>
+              <small class="text-muted">
+                <%= recruiter[:active_jobs] %> jobs |
+                <%= recruiter[:interviews_scheduled] %> interviews
+              </small>
+            </div>
+            <span class="badge bg-success fs-6"><%= recruiter[:hires] %> hires</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aging Summary -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Requisition Health</h5>
+        <%= link_to requisition_aging_reports_operational_index_path, class: "btn btn-sm btn-outline-primary" do %>
+          View Details <i class="bi bi-arrow-right"></i>
+        <% end %>
+      </div>
+      <div class="card-body">
+        <div class="row text-center mb-4">
+          <div class="col">
+            <div class="h2 mb-0 text-primary"><%= @aging[:summary][:total_open_jobs] %></div>
+            <small class="text-muted">Open Jobs</small>
+          </div>
+          <div class="col">
+            <div class="h2 mb-0 text-warning"><%= @aging[:summary][:avg_days_open] %></div>
+            <small class="text-muted">Avg Days Open</small>
+          </div>
+          <div class="col">
+            <div class="h2 mb-0 text-success"><%= @aging[:summary][:on_target_percentage] %>%</div>
+            <small class="text-muted">On Target</small>
+          </div>
+        </div>
+
+        <!-- Aging Breakdown -->
+        <h6>Aging Distribution</h6>
+        <% @aging[:aging_breakdown].each do |bucket| %>
+          <div class="mb-2">
+            <div class="d-flex justify-content-between">
+              <small><%= bucket[:label] %></small>
+              <small><%= bucket[:count] %> jobs</small>
+            </div>
+            <div class="progress" style="height: 8px;">
+              <div class="progress-bar <%= bucket[:label].include?('90+') ? 'bg-danger' : bucket[:label].include?('60') ? 'bg-warning' : 'bg-success' %>"
+                   style="width: <%= bucket[:percentage] %>%;"></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overdue Jobs Alert -->
+<% if @aging[:overdue_jobs].any? %>
+  <div class="card border-warning mb-4">
+    <div class="card-header bg-warning text-dark">
+      <h5 class="card-title mb-0">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        Overdue Requisitions (<%= @aging[:overdue_jobs].count %> jobs over 45 days)
+      </h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Job</th>
+              <th>Department</th>
+              <th>Recruiter</th>
+              <th class="text-end">Days Open</th>
+              <th class="text-end">Applicants</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @aging[:overdue_jobs].first(5).each do |job| %>
+              <tr>
+                <td>
+                  <%= link_to job[:title], job_path(job[:id]) %>
+                </td>
+                <td><%= job[:department] %></td>
+                <td><%= job[:recruiter] || "Unassigned" %></td>
+                <td class="text-end">
+                  <span class="badge bg-danger"><%= job[:days_open] %> days</span>
+                </td>
+                <td class="text-end"><%= job[:applicants] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<!-- Activity Trend -->
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Weekly Activity Trend</h5>
+  </div>
+  <div class="card-body">
+    <% if @productivity[:activity_trend].any? %>
+      <div data-controller="chart"
+           data-chart-type-value="line"
+           data-chart-data-value="<%= {
+             labels: @productivity[:activity_trend].map { |t| t[:label] },
+             datasets: [{
+               label: 'Stage Moves',
+               data: @productivity[:activity_trend].map { |t| t[:stage_moves] },
+               borderColor: '#6B7280',
+               backgroundColor: 'rgba(107, 114, 128, 0.1)'
+             }, {
+               label: 'Interviews',
+               data: @productivity[:activity_trend].map { |t| t[:interviews] },
+               borderColor: '#3B82F6',
+               backgroundColor: 'rgba(59, 130, 246, 0.1)'
+             }, {
+               label: 'Hires',
+               data: @productivity[:activity_trend].map { |t| t[:hires] },
+               borderColor: '#10B981',
+               backgroundColor: 'rgba(16, 185, 129, 0.1)'
+             }]
+           }.to_json %>">
+        <canvas data-chart-target="canvas" height="100"></canvas>
+      </div>
+    <% else %>
+      <div class="text-center text-muted py-4">No activity data available</div>
+    <% end %>
+  </div>
+</div>

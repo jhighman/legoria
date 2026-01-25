@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+john_account:
+  candidate: john_doe
+  email: john.doe@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(CandidateAccount, 'password123') %>
+  confirmed_at: <%= Time.current %>
+  sign_in_count: 3
+  current_sign_in_at: <%= 1.day.ago %>
+  last_sign_in_at: <%= 3.days.ago %>
+  email_notifications: true
+  job_alerts: true
+  job_alert_criteria: '{"departments": [], "locations": ["San Francisco"], "keywords": "engineer"}'
+  failed_attempts: 0
+  created_at: <%= 10.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+jane_account:
+  candidate: jane_smith
+  email: jane.smith@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(CandidateAccount, 'password123') %>
+  confirmed_at: <%= Time.current %>
+  sign_in_count: 1
+  email_notifications: true
+  job_alerts: false
+  failed_attempts: 0
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 5.days.ago %>

@@ -1,0 +1,123 @@
+<%= form_with model: job do |f| %>
+  <% if job.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <div class="d-flex">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        <div>
+          <strong>
+            There <%= job.errors.count == 1 ? "was an error" : "were #{job.errors.count} errors" %> with your submission
+          </strong>
+          <ul class="mb-0 mt-2">
+            <% job.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Basic Information</h5>
+      <div class="row g-3 mt-2">
+        <div class="col-md-8">
+          <%= f.label :title, class: "form-label" %>
+          <%= f.text_field :title, class: "form-control", placeholder: "e.g., Senior Software Engineer" %>
+        </div>
+
+        <div class="col-md-6">
+          <%= f.label :department_id, "Department", class: "form-label" %>
+          <%= f.collection_select :department_id, Department.ordered, :id, :name, { include_blank: "Select Department" }, class: "form-select" %>
+        </div>
+
+        <div class="col-md-6">
+          <%= f.label :hiring_manager_id, "Hiring Manager", class: "form-label" %>
+          <%= f.collection_select :hiring_manager_id, User.with_role("hiring_manager").or(User.with_role("admin")), :id, :display_name, { include_blank: "Select Hiring Manager" }, class: "form-select" %>
+        </div>
+
+        <div class="col-12">
+          <%= f.label :description, class: "form-label" %>
+          <%= f.text_area :description, rows: 6, class: "form-control", placeholder: "Describe the role, responsibilities, and what makes this opportunity exciting..." %>
+        </div>
+
+        <div class="col-12">
+          <%= f.label :requirements, class: "form-label" %>
+          <%= f.text_area :requirements, rows: 4, class: "form-control", placeholder: "List required qualifications, skills, and experience..." %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Location & Employment</h5>
+      <div class="row g-3 mt-2">
+        <div class="col-md-6">
+          <%= f.label :location_type, class: "form-label" %>
+          <%= f.select :location_type, Job::LOCATION_TYPES.map { |t| [t.humanize, t] }, {}, class: "form-select" %>
+        </div>
+
+        <div class="col-md-6">
+          <%= f.label :location, "Location (Optional)", class: "form-label" %>
+          <%= f.text_field :location, class: "form-control", placeholder: "e.g., New York, NY" %>
+        </div>
+
+        <div class="col-md-6">
+          <%= f.label :employment_type, class: "form-label" %>
+          <%= f.select :employment_type, Job::EMPLOYMENT_TYPES.map { |t| [t.humanize, t] }, {}, class: "form-select" %>
+        </div>
+
+        <div class="col-md-6">
+          <%= f.label :headcount, "Number of Openings", class: "form-label" %>
+          <%= f.number_field :headcount, min: 1, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Compensation</h5>
+      <p class="text-muted small">Optional. Salary stored in cents for precision.</p>
+      <div class="row g-3 mt-2">
+        <div class="col-md-4">
+          <%= f.label :salary_min, "Minimum Salary", class: "form-label" %>
+          <%= f.number_field :salary_min, min: 0, step: 100, class: "form-control", placeholder: "e.g., 10000000 ($100,000)" %>
+        </div>
+
+        <div class="col-md-4">
+          <%= f.label :salary_max, "Maximum Salary", class: "form-label" %>
+          <%= f.number_field :salary_max, min: 0, step: 100, class: "form-control", placeholder: "e.g., 15000000 ($150,000)" %>
+        </div>
+
+        <div class="col-md-4">
+          <%= f.label :salary_currency, class: "form-label" %>
+          <%= f.select :salary_currency, [["USD", "USD"], ["EUR", "EUR"], ["GBP", "GBP"]], {}, class: "form-select" %>
+        </div>
+
+        <div class="col-12">
+          <div class="form-check">
+            <%= f.check_box :salary_visible, class: "form-check-input" %>
+            <%= f.label :salary_visible, "Show salary on public job posting", class: "form-check-label" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Internal Notes</h5>
+      <p class="text-muted small">These notes are only visible to your team, not to candidates.</p>
+      <div class="mt-3">
+        <%= f.text_area :internal_notes, rows: 3, class: "form-control", placeholder: "Add any internal context, notes, or reminders..." %>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+    <%= link_to "Cancel", job.persisted? ? job_path(job) : jobs_path, class: "btn btn-outline-secondary" %>
+    <%= f.submit job.persisted? ? "Update Job" : "Create Job", class: "btn btn-primary" %>
+  </div>
+<% end %>

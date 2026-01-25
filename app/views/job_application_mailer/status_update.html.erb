@@ -1,0 +1,55 @@
+<h1>Application Status Update</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>
+  We wanted to let you know that there has been an update to your application for the
+  <strong><%= @job.title %></strong> position at <strong><%= @organization.name %></strong>.
+</p>
+
+<h2>Current Status: <%= @application.status.titleize %></h2>
+
+<% case @application.status %>
+<% when "screening" %>
+  <p>
+    Your application is currently being reviewed by our recruiting team. We will be in touch
+    if your qualifications match our requirements.
+  </p>
+<% when "interviewing" %>
+  <p>
+    Great news! You have been selected to move forward to the interview stage. Our team will
+    be reaching out soon to schedule your interview.
+  </p>
+<% when "assessment" %>
+  <p>
+    You have advanced to the assessment stage of our hiring process. Please check your email
+    for any assessments or tasks that may be assigned.
+  </p>
+<% when "background_check" %>
+  <p>
+    You are in the final stages of our hiring process. A background check is currently in progress.
+  </p>
+<% when "offered" %>
+  <p>
+    Congratulations! An offer has been extended to you. Please check your email for details
+    and next steps.
+  </p>
+<% when "hired" %>
+  <p>
+    Welcome to the team! We are excited to have you join <%= @organization.name %>.
+    You will receive onboarding information shortly.
+  </p>
+<% end %>
+
+<p style="margin: 20px 0;">
+  <%= link_to "View Full Application Status", @status_url, style: "background-color: #0d6efd; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;" %>
+</p>
+
+<p>
+  Thank you for your continued interest in <%= @organization.name %>.
+</p>
+
+<p>
+  Best regards,<br>
+  The <%= @organization.name %> Recruiting Team
+</p>

@@ -1,0 +1,87 @@
+# Phase 5: Candidate score fixtures
+
+john_active_score:
+  organization: acme
+  application: active_application
+  job: open_job
+  candidate: john_doe
+  overall_score: 85.50
+  component_scores:
+    skills_match: 90
+    experience_match: 85
+    education_match: 80
+    location_match: 100
+  score_explanation:
+    skills_match:
+      matched:
+        - Ruby
+        - Rails
+        - PostgreSQL
+      missing:
+        - Kubernetes
+      bonus:
+        - JavaScript
+    experience_match:
+      required: 5
+      candidate_has: 8
+      note: "Exceeds requirement"
+    education_match:
+      required: bachelor
+      candidate_has: bachelor
+      note: "Meets requirement"
+  scoring_version: "v1.0"
+  scored_at: <%= 1.week.ago %>
+  manual_override: false
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+jane_score:
+  organization: acme
+  application: new_application
+  job: open_job
+  candidate: jane_smith
+  overall_score: 72.00
+  component_scores:
+    skills_match: 65
+    experience_match: 70
+    education_match: 85
+    location_match: 100
+  score_explanation:
+    skills_match:
+      matched:
+        - Python
+      missing:
+        - Ruby
+        - Rails
+      bonus: []
+    experience_match:
+      required: 5
+      candidate_has: 4
+      note: "1 year short"
+  scoring_version: "v1.0"
+  scored_at: <%= 2.days.ago %>
+  manual_override: false
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+overridden_score:
+  organization: acme
+  application: rejected_application
+  job: draft_job
+  candidate: john_doe
+  overall_score: 90.00
+  component_scores:
+    skills_match: 75
+    experience_match: 70
+  score_explanation:
+    manual_override:
+      original_score: 72.5
+      new_score: 90.0
+      reason: "Impressive interview performance"
+      overridden_at: <%= 3.days.ago.iso8601 %>
+  scoring_version: "v1.0"
+  scored_at: <%= 1.week.ago %>
+  manual_override: true
+  overridden_by: admin
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 3.days.ago %>

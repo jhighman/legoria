@@ -1,0 +1,29 @@
+# frozen_string_literal: true
+
+pending_case:
+  organization: acme
+  i9_verification: section1_complete
+  status: pending
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+submitted_case:
+  organization: acme
+  i9_verification: verified
+  status: submitted
+  case_number: "EV123456789"
+  submitted_at: <%= 2.days.ago %>
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+authorized_case:
+  organization: acme
+  i9_verification: verified
+  status: employment_authorized
+  case_number: "EV987654321"
+  submitted_at: <%= 10.days.ago %>
+  response_received_at: <%= 9.days.ago %>
+  response_code: "EMPLOYMENT_AUTHORIZED"
+  response_message: "Employment Authorized"
+  created_at: <%= 10.days.ago %>
+  updated_at: <%= 9.days.ago %>

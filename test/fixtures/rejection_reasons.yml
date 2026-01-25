@@ -1,0 +1,71 @@
+# frozen_string_literal: true
+
+not_qualified:
+  organization: acme
+  name: Does not meet minimum qualifications
+  category: not_qualified
+  position: 0
+  active: true
+  requires_notes: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+experience:
+  organization: acme
+  name: Insufficient experience
+  category: not_qualified
+  position: 1
+  active: true
+  requires_notes: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+timing:
+  organization: acme
+  name: Position filled
+  category: timing
+  position: 2
+  active: true
+  requires_notes: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+salary:
+  organization: acme
+  name: Salary expectations too high
+  category: compensation
+  position: 3
+  active: true
+  requires_notes: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+culture:
+  organization: acme
+  name: Not a culture fit
+  category: culture_fit
+  position: 4
+  active: true
+  requires_notes: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+withdrew:
+  organization: acme
+  name: Candidate withdrew
+  category: withdrew
+  position: 5
+  active: true
+  requires_notes: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+other:
+  organization: acme
+  name: Other reason
+  category: other
+  position: 6
+  active: true
+  requires_notes: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

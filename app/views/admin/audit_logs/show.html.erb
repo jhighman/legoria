@@ -1,0 +1,151 @@
+<div class="mb-4">
+  <%= link_to admin_audit_logs_path, class: "btn btn-outline-secondary btn-sm" do %>
+    <i class="bi bi-arrow-left me-1"></i> Back to Audit Logs
+  <% end %>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header bg-white">
+        <h5 class="mb-0">
+          <i class="bi bi-shield-check me-2"></i>
+          Audit Log Details
+        </h5>
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Timestamp</dt>
+          <dd class="col-sm-9"><%= @audit_log.created_at.strftime("%B %d, %Y at %H:%M:%S %Z") %></dd>
+
+          <dt class="col-sm-3">Action</dt>
+          <dd class="col-sm-9">
+            <span class="badge <%= action_badge_class(@audit_log.action) %>">
+              <%= @audit_log.action %>
+            </span>
+          </dd>
+
+          <dt class="col-sm-3">Record Type</dt>
+          <dd class="col-sm-9"><%= @audit_log.auditable_type %></dd>
+
+          <dt class="col-sm-3">Record ID</dt>
+          <dd class="col-sm-9"><%= @audit_log.auditable_id %></dd>
+
+          <dt class="col-sm-3">Record Name</dt>
+          <dd class="col-sm-9"><%= @audit_log.auditable_display_name %></dd>
+
+          <dt class="col-sm-3">User</dt>
+          <dd class="col-sm-9">
+            <% if @audit_log.user %>
+              <%= @audit_log.user.display_name %> (<%= @audit_log.user.email %>)
+            <% else %>
+              <span class="text-muted">System</span>
+            <% end %>
+          </dd>
+
+          <dt class="col-sm-3">IP Address</dt>
+          <dd class="col-sm-9"><%= @audit_log.ip_address || "-" %></dd>
+
+          <dt class="col-sm-3">Request ID</dt>
+          <dd class="col-sm-9">
+            <code class="small"><%= @audit_log.request_id || "-" %></code>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <% if @audit_log.recorded_changes.present? %>
+      <div class="card mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-pencil-square me-2"></i>
+            Changes
+          </h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-sm mb-0">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Before</th>
+                <th>After</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @audit_log.recorded_changes.each do |field, values| %>
+                <tr>
+                  <td class="fw-medium"><%= field.humanize %></td>
+                  <td>
+                    <% if values.is_a?(Array) && values.length == 2 %>
+                      <span class="text-danger"><%= values[0].presence || "<em>empty</em>".html_safe %></span>
+                    <% else %>
+                      -
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if values.is_a?(Array) && values.length == 2 %>
+                      <span class="text-success"><%= values[1].presence || "<em>empty</em>".html_safe %></span>
+                    <% else %>
+                      <%= values %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @audit_log.metadata.present? %>
+      <div class="card">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-info-circle me-2"></i>
+            Metadata
+          </h5>
+        </div>
+        <div class="card-body">
+          <pre class="mb-0 bg-light p-3 rounded"><code><%= JSON.pretty_generate(@audit_log.metadata) %></code></pre>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header bg-white">
+        <h6 class="mb-0">Context</h6>
+      </div>
+      <div class="card-body">
+        <p class="small text-muted mb-2">User Agent</p>
+        <p class="small mb-3" style="word-break: break-all;"><%= @audit_log.user_agent || "-" %></p>
+
+        <% if @audit_log.auditable %>
+          <hr>
+          <p class="small text-muted mb-2">Related Record</p>
+          <% case @audit_log.auditable_type %>
+          <% when "Job" %>
+            <%= link_to job_path(@audit_log.auditable), class: "btn btn-outline-secondary btn-sm w-100" do %>
+              <i class="bi bi-briefcase me-1"></i> View Job
+            <% end %>
+          <% when "Application" %>
+            <% if @audit_log.auditable.job %>
+              <%= link_to job_pipeline_path(@audit_log.auditable.job), class: "btn btn-outline-secondary btn-sm w-100" do %>
+                <i class="bi bi-kanban me-1"></i> View in Pipeline
+              <% end %>
+            <% end %>
+          <% when "Candidate" %>
+            <%= link_to candidate_path(@audit_log.auditable), class: "btn btn-outline-secondary btn-sm w-100" do %>
+              <i class="bi bi-person me-1"></i> View Candidate
+            <% end %>
+          <% when "User" %>
+            <%= link_to edit_admin_user_path(@audit_log.auditable), class: "btn btn-outline-secondary btn-sm w-100" do %>
+              <i class="bi bi-person-gear me-1"></i> View User
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

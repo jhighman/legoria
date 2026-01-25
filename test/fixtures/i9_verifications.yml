@@ -1,0 +1,49 @@
+# frozen_string_literal: true
+
+pending_section1:
+  organization: acme
+  application: active_application
+  candidate: john_doe
+  status: pending_section1
+  employee_start_date: <%= 14.days.from_now.to_date %>
+  deadline_section1: <%= 14.days.from_now.to_date %>
+  deadline_section2: <%= 17.days.from_now.to_date %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+section1_complete:
+  organization: acme
+  application: new_application
+  candidate: jane_smith
+  status: section1_complete
+  employee_start_date: <%= 7.days.from_now.to_date %>
+  deadline_section1: <%= 7.days.from_now.to_date %>
+  deadline_section2: <%= 10.days.from_now.to_date %>
+  attestation_accepted: true
+  citizenship_status: citizen
+  section1_completed_at: <%= 1.day.ago %>
+  section1_signature_ip: "192.168.1.1"
+  section1_signature_user_agent: "Mozilla/5.0"
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+verified:
+  organization: acme
+  application: rejected_application
+  candidate: john_doe
+  status: verified
+  employee_start_date: <%= 30.days.ago.to_date %>
+  deadline_section1: <%= 30.days.ago.to_date %>
+  deadline_section2: <%= 27.days.ago.to_date %>
+  attestation_accepted: true
+  citizenship_status: permanent_resident
+  section1_completed_at: <%= 31.days.ago %>
+  section1_signature_ip: "10.0.0.1"
+  section1_signature_user_agent: "Chrome/100"
+  section2_completed_at: <%= 29.days.ago %>
+  section2_signature_ip: "10.0.0.2"
+  employer_title: "HR Manager"
+  employer_organization_name: "Acme Corp"
+  employer_organization_address: "123 Main St, City, ST 12345"
+  created_at: <%= 35.days.ago %>
+  updated_at: <%= 29.days.ago %>

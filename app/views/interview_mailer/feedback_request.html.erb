@@ -1,0 +1,33 @@
+<h1>Feedback Requested</h1>
+
+<p>Hi <%= @user.first_name %>,</p>
+
+<p>The interview with <strong><%= @candidate.full_name %></strong> for the <strong><%= @job.title %></strong> position has been completed.</p>
+
+<p>Please submit your feedback and scorecard at your earliest convenience to help the hiring team make an informed decision.</p>
+
+<h2>Interview Summary</h2>
+
+<table style="border-collapse: collapse; margin: 20px 0;">
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Candidate:</td>
+    <td style="padding: 8px 0;"><%= @candidate.full_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Position:</td>
+    <td style="padding: 8px 0;"><%= @job.title %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Interview Type:</td>
+    <td style="padding: 8px 0;"><%= @interview.interview_type_label %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Date:</td>
+    <td style="padding: 8px 0;"><%= @interview.scheduled_at_formatted(format: :date) %></td>
+  </tr>
+</table>
+
+<p>Your feedback is valuable in evaluating candidates fairly and consistently.</p>
+
+<p>Best regards,<br>
+<%= @organization.name %> Recruiting</p>

@@ -1,0 +1,77 @@
+# frozen_string_literal: true
+
+draft_offer:
+  organization: acme
+  application: active_application
+  offer_template: standard_template
+  created_by: recruiter
+  title: Product Manager
+  status: draft
+  salary: 120000
+  salary_period: yearly
+  currency: USD
+  signing_bonus: 10000
+  annual_bonus_target: 15
+  employment_type: full_time
+  proposed_start_date: <%= 30.days.from_now.to_date %>
+  work_location: San Francisco, CA
+  reports_to: VP of Product
+  department: Product
+  expires_at: <%= 14.days.from_now %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+pending_approval_offer:
+  organization: acme
+  application: new_application
+  created_by: recruiter
+  title: Software Engineer
+  status: pending_approval
+  salary: 150000
+  salary_period: yearly
+  currency: USD
+  signing_bonus: 15000
+  equity_type: options
+  equity_shares: 5000
+  equity_vesting_schedule: 4-year with 1-year cliff
+  employment_type: full_time
+  proposed_start_date: <%= 45.days.from_now.to_date %>
+  work_location: Remote
+  expires_at: <%= 21.days.from_now %>
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+sent_offer:
+  organization: acme
+  application: active_application
+  created_by: recruiter
+  title: Senior Designer
+  status: sent
+  salary: 140000
+  salary_period: yearly
+  currency: USD
+  employment_type: full_time
+  proposed_start_date: <%= 60.days.from_now.to_date %>
+  work_location: New York, NY
+  expires_at: <%= 7.days.from_now %>
+  sent_at: <%= 3.days.ago %>
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 3.days.ago %>
+
+accepted_offer:
+  organization: acme
+  application: active_application
+  created_by: recruiter
+  title: Data Analyst
+  status: accepted
+  salary: 95000
+  salary_period: yearly
+  currency: USD
+  employment_type: full_time
+  proposed_start_date: <%= 14.days.from_now.to_date %>
+  work_location: Chicago, IL
+  sent_at: <%= 10.days.ago %>
+  responded_at: <%= 5.days.ago %>
+  response: accepted
+  created_at: <%= 14.days.ago %>
+  updated_at: <%= 5.days.ago %>

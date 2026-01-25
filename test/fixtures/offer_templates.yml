@@ -1,0 +1,79 @@
+# frozen_string_literal: true
+
+standard_template:
+  organization: acme
+  name: Standard Offer Letter
+  description: Default offer letter template for full-time employees
+  template_type: standard
+  subject_line: "Offer of Employment: {{job_title}} at {{company_name}}"
+  body: |
+    Dear {{candidate_name}},
+
+    We are pleased to offer you the position of {{job_title}} at {{company_name}}.
+
+    Compensation:
+    - Base Salary: {{salary}} {{salary_period}}
+    - Signing Bonus: {{signing_bonus}}
+    - Annual Bonus Target: {{annual_bonus_target}}
+
+    Start Date: {{start_date}}
+    Location: {{location}}
+    Reports To: {{reports_to}}
+
+    This offer expires on {{offer_expiration_date}}.
+
+    We look forward to welcoming you to the team!
+
+    Best regards,
+    The {{company_name}} Team
+  footer: This is a confidential offer of employment.
+  available_variables:
+    - candidate_name
+    - job_title
+    - company_name
+    - salary
+    - salary_period
+    - signing_bonus
+    - annual_bonus_target
+    - start_date
+    - location
+    - reports_to
+    - offer_expiration_date
+  active: true
+  is_default: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+executive_template:
+  organization: acme
+  name: Executive Offer Letter
+  description: Offer letter template for executive positions with equity
+  template_type: executive
+  subject_line: "Executive Offer: {{job_title}}"
+  body: |
+    Dear {{candidate_name}},
+
+    We are excited to extend an offer for the role of {{job_title}}.
+
+    Compensation Package:
+    - Base Salary: {{salary}} per year
+    - Signing Bonus: {{signing_bonus}}
+    - Annual Bonus: {{annual_bonus_target}} target
+    - Equity: {{equity_shares}} {{equity_type}} ({{equity_vesting_schedule}})
+
+    Please review the attached terms and conditions.
+  active: true
+  is_default: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_template:
+  organization: acme
+  name: Old Template
+  description: No longer in use
+  template_type: standard
+  body: Old content
+  active: false
+  is_default: false
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 30.days.ago %>

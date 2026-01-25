@@ -1,0 +1,126 @@
+<%= turbo_frame_tag dom_id(application) do %>
+  <div class="card mb-2 pipeline-card"
+       id="<%= dom_id(application) %>"
+       draggable="true"
+       data-application-id="<%= application.id %>"
+       data-action="dragstart->pipeline#dragStart dragend->pipeline#dragEnd">
+    <div class="card-body p-2">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="d-flex align-items-center">
+          <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+            <small><%= application.candidate.initials %></small>
+          </div>
+          <div>
+            <div class="fw-medium small">
+              <%= link_to application.candidate.full_name, candidate_path(application.candidate), class: "text-decoration-none text-dark" %>
+            </div>
+            <div class="text-muted" style="font-size: 0.75rem;">
+              <%= application.candidate.email %>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex gap-1">
+          <% if application.starred? %>
+            <%= button_to unstar_application_job_pipeline_path(job, id: application.id), method: :post, class: "btn btn-link btn-sm p-0 text-warning", data: { turbo_frame: dom_id(application) } do %>
+              <i class="bi bi-star-fill"></i>
+            <% end %>
+          <% else %>
+            <%= button_to star_application_job_pipeline_path(job, id: application.id), method: :post, class: "btn btn-link btn-sm p-0 text-muted", data: { turbo_frame: dom_id(application) } do %>
+              <i class="bi bi-star"></i>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="small text-muted">
+          <i class="bi bi-calendar me-1"></i>
+          <%= time_ago_in_words(application.applied_at) %> ago
+        </div>
+        <div>
+          <% if application.rating.present? %>
+            <span class="badge bg-light text-dark border">
+              <% application.rating.times do %>
+                <i class="bi bi-star-fill text-warning" style="font-size: 0.6rem;"></i>
+              <% end %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+
+      <% if application.source_type.present? %>
+        <div class="mt-2">
+          <span class="badge bg-light text-dark border small">
+            <%= application.source_label %>
+          </span>
+        </div>
+      <% end %>
+
+      <!-- Quick Actions -->
+      <div class="mt-2 pt-2 border-top d-flex gap-1">
+        <div class="dropdown">
+          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-arrow-right"></i> Move
+          </button>
+          <ul class="dropdown-menu">
+            <% job.stages.ordered.each do |stage| %>
+              <% unless stage.id == application.current_stage_id %>
+                <li>
+                  <%= button_to move_stage_job_pipeline_path(job, id: application.id, stage_id: stage.id),
+                      method: :post,
+                      class: "dropdown-item",
+                      data: { turbo_frame: "_top" } do %>
+                    <% if stage.color.present? %>
+                      <span class="rounded-circle me-2" style="width: 8px; height: 8px; background-color: <%= stage.color %>; display: inline-block;"></span>
+                    <% end %>
+                    <%= stage.name %>
+                  <% end %>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-star"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <% (1..5).each do |rating| %>
+              <li>
+                <%= button_to rate_application_job_pipeline_path(job, id: application.id, rating: rating),
+                    method: :post,
+                    class: "dropdown-item #{'active' if application.rating == rating}",
+                    data: { turbo_frame: dom_id(application) } do %>
+                  <% rating.times do %><i class="bi bi-star-fill text-warning"></i><% end %>
+                  <% (5 - rating).times do %><i class="bi bi-star text-muted"></i><% end %>
+                <% end %>
+              </li>
+            <% end %>
+            <% if application.rating.present? %>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= button_to rate_application_job_pipeline_path(job, id: application.id, rating: 0),
+                    method: :post,
+                    class: "dropdown-item",
+                    data: { turbo_frame: dom_id(application) } do %>
+                  <i class="bi bi-x"></i> Clear rating
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <% if application.active? %>
+          <button type="button" class="btn btn-sm btn-outline-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#rejectModal"
+                  data-application-id="<%= application.id %>"
+                  data-candidate-name="<%= application.candidate.full_name %>">
+            <i class="bi bi-x-circle"></i>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

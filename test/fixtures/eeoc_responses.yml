@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+complete_response:
+  organization: acme
+  application: active_application
+  gender: female
+  race_ethnicity: asian
+  veteran_status: not_veteran
+  disability_status: "no"
+  consent_given: true
+  consent_timestamp: <%= 5.days.ago %>
+  consent_ip_address: "192.168.1.100"
+  collection_context: application
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 5.days.ago %>
+
+declined_response:
+  organization: acme
+  application: rejected_application
+  gender: prefer_not_to_say
+  race_ethnicity: prefer_not_to_say
+  veteran_status: prefer_not_to_say
+  disability_status: prefer_not_to_say
+  consent_given: true
+  consent_timestamp: <%= 3.days.ago %>
+  collection_context: post_apply_email
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 3.days.ago %>

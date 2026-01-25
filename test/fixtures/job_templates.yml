@@ -1,0 +1,44 @@
+# frozen_string_literal: true
+
+engineer_template:
+  organization: acme
+  department: engineering
+  name: Software Engineer Template
+  title: Software Engineer
+  description: Standard software engineer role
+  requirements: 3+ years experience
+  location_type: hybrid
+  employment_type: full_time
+  default_headcount: 1
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+pm_template:
+  organization: acme
+  department: product
+  name: Product Manager Template
+  title: Product Manager
+  description: Product management role
+  requirements: Product experience required
+  location_type: onsite
+  employment_type: full_time
+  salary_min: 12000000
+  salary_max: 18000000
+  salary_currency: USD
+  default_headcount: 1
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_template:
+  organization: acme
+  name: Old Template
+  title: Deprecated Role
+  description: Not used anymore
+  location_type: onsite
+  employment_type: full_time
+  default_headcount: 1
+  active: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

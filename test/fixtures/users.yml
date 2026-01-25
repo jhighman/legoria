@@ -1,0 +1,52 @@
+# frozen_string_literal: true
+
+admin:
+  organization: acme
+  first_name: Admin
+  last_name: User
+  email: admin@acme.example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  active: true
+  confirmed_at: <%= Time.current %>
+  sign_in_count: 0
+  failed_attempts: 0
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+recruiter:
+  organization: acme
+  first_name: Sarah
+  last_name: Recruiter
+  email: recruiter@acme.example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  active: true
+  confirmed_at: <%= Time.current %>
+  sign_in_count: 0
+  failed_attempts: 0
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+hiring_manager:
+  organization: acme
+  first_name: Mike
+  last_name: Manager
+  email: manager@acme.example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  active: true
+  confirmed_at: <%= Time.current %>
+  sign_in_count: 0
+  failed_attempts: 0
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_user:
+  organization: acme
+  first_name: Inactive
+  last_name: User
+  email: inactive@acme.example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  active: false
+  sign_in_count: 0
+  failed_attempts: 0
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

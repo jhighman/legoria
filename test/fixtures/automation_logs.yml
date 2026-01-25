@@ -1,0 +1,73 @@
+# Phase 5: Automation log fixtures
+
+knockout_success:
+  organization: acme
+  automation_rule: knockout_rule
+  application: rejected_application
+  candidate: john_doe
+  status: success
+  trigger_event: application_created
+  conditions_evaluated:
+    question_id: 1
+    operator: equals
+    value: "no"
+  actions_taken:
+    - type: reject
+      reason_id: 1
+    - type: send_email
+      template: rejection
+  triggered_at: <%= 3.days.ago %>
+  execution_time_ms: 150
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 3.days.ago %>
+
+advance_success:
+  organization: acme
+  automation_rule: high_score_advance
+  application: active_application
+  candidate: jane_smith
+  status: success
+  trigger_event: score_calculated
+  conditions_evaluated:
+    min_score: 80
+  actions_taken:
+    - type: advance
+      to_stage: Screening
+    - type: notify
+      users:
+        - recruiter
+  triggered_at: <%= 1.week.ago %>
+  execution_time_ms: 85
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+failed_log:
+  organization: acme
+  automation_rule: knockout_rule
+  application: new_application
+  candidate: jane_smith
+  status: failed
+  trigger_event: application_created
+  conditions_evaluated:
+    question_id: 1
+    operator: equals
+    value: "no"
+  error_message: "Email service unavailable"
+  triggered_at: <%= 2.days.ago %>
+  execution_time_ms: 2500
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+skipped_log:
+  organization: acme
+  automation_rule: high_score_advance
+  application: new_application
+  candidate: john_doe
+  status: skipped
+  trigger_event: score_calculated
+  conditions_evaluated:
+    min_score: 80
+  triggered_at: <%= 1.day.ago %>
+  execution_time_ms: 25
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

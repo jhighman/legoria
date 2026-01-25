@@ -1,0 +1,43 @@
+# frozen_string_literal: true
+
+pending_hire_decision:
+  organization: acme
+  application: active_application
+  decided_by: recruiter
+  decision: hire
+  status: pending
+  rationale: Strong candidate with excellent technical skills and cultural fit.
+  proposed_salary: 95000.00
+  proposed_salary_currency: USD
+  proposed_start_date: <%= 2.weeks.from_now.to_date %>
+  decided_at: <%= 1.day.ago %>
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+approved_hire_decision:
+  organization: acme
+  application: new_application
+  decided_by: recruiter
+  approved_by: hiring_manager
+  decision: hire
+  status: approved
+  rationale: Exceptional candidate, exceeded all interview criteria.
+  proposed_salary: 120000.00
+  proposed_salary_currency: USD
+  proposed_start_date: <%= 1.week.from_now.to_date %>
+  decided_at: <%= 3.days.ago %>
+  approved_at: <%= 1.day.ago %>
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+rejected_hold_decision:
+  organization: acme
+  application: rejected_application
+  decided_by: hiring_manager
+  decision: hold
+  status: rejected
+  rationale: Need more information before making a final decision.
+  decided_at: <%= 5.days.ago %>
+  rejected_at: <%= 3.days.ago %>
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 3.days.ago %>

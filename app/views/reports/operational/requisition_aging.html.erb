@@ -1,0 +1,191 @@
+<% content_for :title, "Requisition Aging Report" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item"><%= link_to "Operational", reports_operational_index_path %></li>
+        <li class="breadcrumb-item active">Requisition Aging</li>
+      </ol>
+    </nav>
+    <h1 class="h3 mb-0">Requisition Aging</h1>
+  </div>
+  <%= render "reports/shared/export_buttons",
+        csv_path: export_reports_operational_index_path(type: "aging", **request.query_parameters) %>
+</div>
+
+<%= render "reports/shared/date_range_filter", departments: @departments, show_filters: true %>
+
+<!-- Summary Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-4 fw-bold text-primary"><%= @data[:summary][:total_open_jobs] %></div>
+        <div class="text-muted">Open Jobs</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-4 fw-bold text-warning"><%= @data[:summary][:avg_days_open] %></div>
+        <div class="text-muted">Avg Days Open</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-4 fw-bold text-success"><%= @data[:summary][:jobs_filled] %></div>
+        <div class="text-muted">Filled This Period</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-4 fw-bold text-info"><%= @data[:summary][:on_target_percentage] %>%</div>
+        <div class="text-muted">On Target (&le;45 days)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Aging Chart -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Aging Distribution</h5>
+      </div>
+      <div class="card-body">
+        <div data-controller="chart"
+             data-chart-type-value="doughnut"
+             data-chart-data-value="<%= {
+               labels: @data[:aging_breakdown].map { |b| b[:label] },
+               datasets: [{
+                 data: @data[:aging_breakdown].map { |b| b[:count] },
+                 backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#7C3AED']
+               }]
+             }.to_json %>">
+          <canvas data-chart-target="canvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aging Breakdown List -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Jobs by Age</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="accordion accordion-flush" id="agingAccordion">
+          <% @data[:aging_breakdown].each_with_index do |bucket, index| %>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#aging<%= index %>">
+                  <span class="badge bg-secondary me-2"><%= bucket[:count] %></span>
+                  <%= bucket[:label] %>
+                </button>
+              </h2>
+              <div id="aging<%= index %>" class="accordion-collapse collapse" data-bs-parent="#agingAccordion">
+                <div class="accordion-body p-0">
+                  <% if bucket[:jobs].any? %>
+                    <ul class="list-group list-group-flush">
+                      <% bucket[:jobs].each do |job| %>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <div>
+                            <%= link_to job[:title], job_path(job[:id]) %>
+                            <br>
+                            <small class="text-muted"><%= job[:department] %></small>
+                          </div>
+                          <div class="text-end">
+                            <span class="badge bg-secondary"><%= job[:days_open] %> days</span>
+                            <br>
+                            <small class="text-muted"><%= job[:applicants] %> applicants</small>
+                          </div>
+                        </li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <div class="p-3 text-center text-muted">No jobs in this range</div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Department Breakdown -->
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="card-title mb-0">By Department</h5>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Department</th>
+            <th class="text-end">Open Jobs</th>
+            <th class="text-end">Avg Days Open</th>
+            <th class="text-end">Filled This Period</th>
+            <th class="text-end">Total Applicants</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @data[:by_department].each do |dept| %>
+            <tr>
+              <td><%= dept[:department_name] %></td>
+              <td class="text-end"><%= dept[:open_jobs] %></td>
+              <td class="text-end">
+                <span class="badge bg-<%= dept[:avg_days_open] <= 30 ? 'success' : dept[:avg_days_open] <= 60 ? 'warning' : 'danger' %>">
+                  <%= dept[:avg_days_open] %> days
+                </span>
+              </td>
+              <td class="text-end text-success"><%= dept[:filled_in_period] %></td>
+              <td class="text-end"><%= dept[:total_applicants] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Fill Rate Trend -->
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Weekly Requisition Activity</h5>
+  </div>
+  <div class="card-body">
+    <% if @data[:fill_rate_trend].any? %>
+      <div data-controller="chart"
+           data-chart-type-value="bar"
+           data-chart-data-value="<%= {
+             labels: @data[:fill_rate_trend].map { |t| t[:label] },
+             datasets: [{
+               label: 'Opened',
+               data: @data[:fill_rate_trend].map { |t| t[:opened] },
+               backgroundColor: '#3B82F6'
+             }, {
+               label: 'Filled',
+               data: @data[:fill_rate_trend].map { |t| t[:filled] },
+               backgroundColor: '#10B981'
+             }]
+           }.to_json %>">
+        <canvas data-chart-target="canvas" height="100"></canvas>
+      </div>
+    <% else %>
+      <div class="text-center text-muted py-4">No trend data available</div>
+    <% end %>
+  </div>
+</div>

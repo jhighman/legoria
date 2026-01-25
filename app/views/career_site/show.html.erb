@@ -1,0 +1,171 @@
+<% content_for(:title) { @job.title } %>
+<% content_for(:description) { truncate(strip_tags(@job.description || ""), length: 160) } %>
+
+<!-- Job Header -->
+<section class="bg-light border-bottom py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><%= link_to "Careers", careers_path %></li>
+            <li class="breadcrumb-item active" aria-current="page"><%= @job.title %></li>
+          </ol>
+        </nav>
+
+        <h1 class="display-5 fw-bold mb-3"><%= @job.title %></h1>
+
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <% if @job.department %>
+            <span class="badge bg-secondary fs-6">
+              <i class="bi bi-building me-1"></i><%= @job.department.name %>
+            </span>
+          <% end %>
+          <span class="badge bg-success fs-6">
+            <i class="bi bi-geo-alt me-1"></i><%= @job.location_type_display %>
+          </span>
+          <span class="badge bg-info fs-6">
+            <i class="bi bi-briefcase me-1"></i><%= @job.employment_type_display %>
+          </span>
+        </div>
+
+        <% if @job.location.present? %>
+          <p class="text-muted mb-2">
+            <i class="bi bi-pin-map me-2"></i><%= @job.location %>
+          </p>
+        <% end %>
+
+        <% if @job.salary_min.present? || @job.salary_max.present? %>
+          <p class="text-muted mb-0">
+            <i class="bi bi-currency-dollar me-2"></i>
+            <% if @job.salary_min.present? && @job.salary_max.present? %>
+              <%= number_to_currency(@job.salary_min, precision: 0) %> - <%= number_to_currency(@job.salary_max, precision: 0) %> per year
+            <% elsif @job.salary_min.present? %>
+              From <%= number_to_currency(@job.salary_min, precision: 0) %> per year
+            <% else %>
+              Up to <%= number_to_currency(@job.salary_max, precision: 0) %> per year
+            <% end %>
+          </p>
+        <% end %>
+      </div>
+      <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+        <%= link_to apply_career_path(@job), class: "btn btn-primary btn-lg px-5" do %>
+          <i class="bi bi-send me-2"></i>Apply Now
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container py-5">
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+      <% if @job.description.present? %>
+        <div class="card mb-4">
+          <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="bi bi-file-text me-2"></i>Job Description</h5>
+          </div>
+          <div class="card-body">
+            <div class="job-description">
+              <%= simple_format(@job.description) %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @job.requirements.present? %>
+        <div class="card mb-4">
+          <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>Requirements</h5>
+          </div>
+          <div class="card-body">
+            <%= simple_format(@job.requirements) %>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Apply Card -->
+      <div class="card mb-4 border-primary">
+        <div class="card-body text-center">
+          <h5 class="card-title">Ready to Apply?</h5>
+          <p class="text-muted small">Join our team and help shape the future.</p>
+          <%= link_to apply_career_path(@job), class: "btn btn-primary w-100 mb-2" do %>
+            <i class="bi bi-send me-2"></i>Apply for this Position
+          <% end %>
+          <p class="text-muted small mb-0">
+            <i class="bi bi-clock me-1"></i>Application takes about 5 minutes
+          </p>
+        </div>
+      </div>
+
+      <!-- Job Details -->
+      <div class="card mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Job Details</h6>
+        </div>
+        <div class="card-body">
+          <dl class="row mb-0">
+            <dt class="col-sm-5 text-muted">Job Type</dt>
+            <dd class="col-sm-7"><%= @job.employment_type_display %></dd>
+
+            <dt class="col-sm-5 text-muted">Location Type</dt>
+            <dd class="col-sm-7"><%= @job.location_type_display %></dd>
+
+            <% if @job.location.present? %>
+              <dt class="col-sm-5 text-muted">Location</dt>
+              <dd class="col-sm-7"><%= @job.location %></dd>
+            <% end %>
+
+            <% if @job.department %>
+              <dt class="col-sm-5 text-muted">Department</dt>
+              <dd class="col-sm-7"><%= @job.department.name %></dd>
+            <% end %>
+
+            <dt class="col-sm-5 text-muted">Posted</dt>
+            <dd class="col-sm-7"><%= @job.created_at.strftime("%B %d, %Y") %></dd>
+
+            <% if @job.headcount > 1 %>
+              <dt class="col-sm-5 text-muted">Openings</dt>
+              <dd class="col-sm-7"><%= @job.headcount - @job.filled_count %> position(s)</dd>
+            <% end %>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Hiring Process -->
+      <div class="card">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Hiring Process</h6>
+        </div>
+        <div class="card-body">
+          <div class="hiring-steps">
+            <% @stages.each_with_index do |stage, index| %>
+              <div class="d-flex mb-<%= index == @stages.length - 1 ? '0' : '3' %>">
+                <div class="me-3">
+                  <span class="badge rounded-pill bg-light text-dark" style="width: 28px; height: 28px; line-height: 20px;">
+                    <%= index + 1 %>
+                  </span>
+                </div>
+                <div>
+                  <strong><%= stage.name %></strong>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back Link -->
+  <div class="mt-4">
+    <%= link_to careers_path, class: "btn btn-outline-secondary" do %>
+      <i class="bi bi-arrow-left me-2"></i>Back to All Jobs
+    <% end %>
+  </div>
+</div>

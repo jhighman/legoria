@@ -1,0 +1,12 @@
+<%= form_with model: [candidate, note], url: add_note_candidate_path(candidate) do |f| %>
+  <div class="mb-2">
+    <%= f.text_area :content, rows: 3, placeholder: "Add a note...", class: "form-control form-control-sm" %>
+    <% if note.errors[:content].any? %>
+      <div class="text-danger small mt-1"><%= note.errors[:content].first %></div>
+    <% end %>
+  </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <%= f.select :visibility, CandidateNote::VISIBILITIES.map { |v| [v.titleize, v] }, {}, class: "form-select form-select-sm", style: "width: auto;" %>
+    <%= f.submit "Add Note", class: "btn btn-primary btn-sm" %>
+  </div>
+<% end %>

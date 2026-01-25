@@ -1,0 +1,71 @@
+<h1>Action Required: Complete Your I-9 Form</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>
+  Congratulations on your upcoming start at <strong><%= @organization.name %></strong>!
+  As part of the onboarding process, you are required to complete Section 1 of Form I-9
+  (Employment Eligibility Verification).
+</p>
+
+<h2>What You Need to Do</h2>
+
+<p>
+  <strong>Complete Section 1 of Form I-9 by <%= @deadline&.strftime("%B %d, %Y") %></strong>
+  (your first day of work).
+</p>
+
+<p>
+  Section 1 asks for your basic information and requires you to attest to your
+  employment authorization status. This is a federal requirement for all employees.
+</p>
+
+<h2>Required Information</h2>
+
+<p>To complete Section 1, you will need to provide:</p>
+
+<ul>
+  <li>Your full legal name</li>
+  <li>Date of birth</li>
+  <li>Social Security Number (if you have one)</li>
+  <li>Citizenship/immigration status</li>
+</ul>
+
+<h2>What Happens Next</h2>
+
+<p>
+  After you complete Section 1, our HR team will contact you to complete Section 2,
+  which requires you to present original identity and employment authorization documents
+  within <strong>3 business days</strong> of your start date.
+</p>
+
+<h2>Position Details</h2>
+
+<table style="width: 100%; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Position:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @job.title %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Start Date:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @i9_verification&.employee_start_date&.strftime("%B %d, %Y") %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Section 1 Deadline:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @deadline&.strftime("%B %d, %Y") %></td>
+  </tr>
+</table>
+
+<p style="margin-top: 30px; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
+  <strong>Note:</strong> Failure to complete the I-9 form by the deadline may delay your start date.
+  If you have any questions, please contact HR immediately.
+</p>
+
+<p>
+  We look forward to having you join our team!
+</p>
+
+<p>
+  Best regards,<br>
+  The <%= @organization.name %> HR Team
+</p>

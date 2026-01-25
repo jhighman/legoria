@@ -1,0 +1,51 @@
+# SA-11: Integration fixtures
+
+indeed_integration:
+  organization: acme
+  created_by: admin
+  integration_type: job_board
+  provider: indeed
+  name: Indeed Job Board
+  status: active
+  auto_sync: true
+  sync_frequency: hourly
+  last_sync_at: <%= 1.hour.ago %>
+
+checkr_integration:
+  organization: acme
+  created_by: admin
+  integration_type: background_check
+  provider: checkr
+  name: Checkr Background Screening
+  status: active
+  auto_sync: true
+  sync_frequency: realtime
+
+workday_integration:
+  organization: acme
+  created_by: admin
+  integration_type: hris
+  provider: workday
+  name: Workday HRIS
+  status: pending
+  auto_sync: false
+  sync_frequency: daily
+
+disabled_integration:
+  organization: acme
+  created_by: admin
+  integration_type: job_board
+  provider: linkedin
+  name: LinkedIn (Disabled)
+  status: disabled
+  auto_sync: false
+
+globex_indeed:
+  organization: globex
+  created_by: recruiter
+  integration_type: job_board
+  provider: indeed
+  name: Globex Indeed
+  status: active
+  auto_sync: true
+  sync_frequency: hourly

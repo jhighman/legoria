@@ -1,0 +1,44 @@
+# frozen_string_literal: true
+
+active_application:
+  organization: acme
+  job: open_job
+  candidate: john_doe
+  current_stage: screening
+  status: screening
+  source_type: career_site
+  applied_at: <%= 5.days.ago %>
+  last_activity_at: <%= 1.day.ago %>
+  rating: 4
+  starred: true
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= Time.current %>
+
+new_application:
+  organization: acme
+  job: open_job
+  candidate: jane_smith
+  current_stage: applied
+  status: new
+  source_type: referral
+  source_detail: employee_referral
+  applied_at: <%= 1.day.ago %>
+  last_activity_at: <%= 1.day.ago %>
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= Time.current %>
+
+rejected_application:
+  organization: acme
+  job: draft_job
+  candidate: john_doe
+  current_stage: rejected
+  status: rejected
+  source_type: job_board
+  source_detail: indeed
+  applied_at: <%= 30.days.ago %>
+  rejected_at: <%= 10.days.ago %>
+  last_activity_at: <%= 10.days.ago %>
+  rejection_reason: not_qualified
+  rejection_notes: Lacking required experience
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 10.days.ago %>

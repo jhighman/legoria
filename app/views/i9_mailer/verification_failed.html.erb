@@ -1,0 +1,54 @@
+<h1 style="color: #dc3545;">I-9 Verification Issue</h1>
+
+<p>Hello,</p>
+
+<p>
+  There is an issue with the I-9 employment eligibility verification for
+  <strong><%= @candidate.full_name %></strong> for the <strong><%= @job.title %></strong> position.
+</p>
+
+<h2>Status</h2>
+
+<p style="font-size: 18px; color: #dc3545; padding: 10px; background-color: #f8d7da; border-radius: 4px;">
+  <strong>Verification Failed</strong>
+</p>
+
+<h2>Candidate Details</h2>
+
+<table style="width: 100%; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Employee:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @candidate.full_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Position:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @job.title %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Expected Start Date:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @i9_verification&.employee_start_date&.strftime("%B %d, %Y") %></td>
+  </tr>
+</table>
+
+<h2>Required Actions</h2>
+
+<p>
+  Please review the I-9 verification details and take appropriate action.
+  This may include:
+</p>
+
+<ul>
+  <li>Contacting the employee to request additional documentation</li>
+  <li>Reviewing E-Verify results if applicable</li>
+  <li>Consulting with legal counsel if needed</li>
+</ul>
+
+<p style="margin-top: 20px; padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107;">
+  <strong>Important:</strong> Do not make employment decisions based solely on national origin
+  or citizenship status. Follow USCIS guidelines and consult legal counsel if needed.
+</p>
+
+<p>
+  Best regards,<br>
+  <%= PlatformBrand.name %> System
+</p>

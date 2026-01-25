@@ -1,0 +1,52 @@
+<h1>Interview Assignment</h1>
+
+<p>Hi <%= @user.first_name %>,</p>
+
+<p>You have been assigned as <strong><%= @participant.role_label %></strong> for an upcoming interview.</p>
+
+<h2>Interview Details</h2>
+
+<table style="border-collapse: collapse; margin: 20px 0;">
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Candidate:</td>
+    <td style="padding: 8px 0;"><%= @candidate.full_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Position:</td>
+    <td style="padding: 8px 0;"><%= @job.title %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Date & Time:</td>
+    <td style="padding: 8px 0;"><%= @interview.scheduled_at_formatted %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Duration:</td>
+    <td style="padding: 8px 0;"><%= @interview.duration_formatted %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Type:</td>
+    <td style="padding: 8px 0;"><%= @interview.interview_type_label %></td>
+  </tr>
+  <% if @interview.location.present? %>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Location:</td>
+    <td style="padding: 8px 0;"><%= @interview.location %></td>
+  </tr>
+  <% end %>
+  <% if @interview.video_meeting_url.present? %>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Meeting Link:</td>
+    <td style="padding: 8px 0;"><%= link_to "Join Meeting", @interview.video_meeting_url %></td>
+  </tr>
+  <% end %>
+</table>
+
+<% if @interview.instructions.present? %>
+<h3>Interview Instructions</h3>
+<p><%= simple_format(@interview.instructions) %></p>
+<% end %>
+
+<p>Please review the candidate's profile before the interview and prepare your questions.</p>
+
+<p>Best regards,<br>
+<%= @organization.name %> Recruiting</p>

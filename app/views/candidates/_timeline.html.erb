@@ -1,0 +1,23 @@
+<%# Renders a timeline of activity for a candidate %>
+<% if timeline.any? %>
+  <div class="mt-3">
+    <% timeline.each_with_index do |item, index| %>
+      <div class="d-flex mb-3">
+        <div class="me-3">
+          <div class="rounded-circle d-flex align-items-center justify-content-center <%= timeline_item_bg_class(item[:type]) %>" style="width: 32px; height: 32px;">
+            <%= timeline_item_icon(item[:type]) %>
+          </div>
+        </div>
+        <div class="flex-grow-1">
+          <p class="mb-0 small"><%= item[:title] %></p>
+          <% if item[:description].present? %>
+            <p class="mb-0 text-muted small"><%= item[:description] %></p>
+          <% end %>
+          <p class="mb-0 text-muted small"><%= time_ago_in_words(item[:date]) %> ago</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-muted text-center py-3 small mb-0">No activity yet</p>
+<% end %>

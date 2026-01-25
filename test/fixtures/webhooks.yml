@@ -1,0 +1,72 @@
+# SA-11: Webhook fixtures
+
+application_webhook:
+  organization: acme
+  created_by: admin
+  name: Application Events Webhook
+  url: https://example.com/webhooks/applications
+  events:
+    - application.created
+    - application.stage_changed
+    - application.hired
+    - application.rejected
+  active: true
+  status: active
+  last_triggered_at: <%= 1.hour.ago %>
+  success_count: 42
+  failure_count: 3
+  consecutive_failures: 0
+
+interview_webhook:
+  organization: acme
+  created_by: admin
+  name: Interview Events Webhook
+  url: https://example.com/webhooks/interviews
+  events:
+    - interview.scheduled
+    - interview.completed
+    - interview.cancelled
+  active: true
+  status: active
+  success_count: 15
+  failure_count: 0
+  consecutive_failures: 0
+
+paused_webhook:
+  organization: acme
+  created_by: admin
+  name: Paused Webhook
+  url: https://example.com/webhooks/paused
+  events:
+    - offer.created
+  active: true
+  status: failing
+  success_count: 0
+  failure_count: 5
+  consecutive_failures: 5
+
+disabled_webhook:
+  organization: acme
+  created_by: admin
+  name: Disabled Webhook
+  url: https://old.example.com/webhooks
+  events:
+    - candidate.created
+  active: false
+  status: disabled
+  failure_count: 15
+  consecutive_failures: 10
+
+globex_webhook:
+  organization: globex
+  created_by: recruiter
+  name: Globex Webhook
+  url: https://globex.example.com/webhooks
+  events:
+    - application.created
+    - application.hired
+  active: true
+  status: active
+  success_count: 0
+  failure_count: 0
+  consecutive_failures: 0

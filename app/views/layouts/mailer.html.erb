@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+      .email-wrapper {
+        background-color: #ffffff;
+        border-radius: 8px;
+        margin: 20px auto;
+        max-width: 600px;
+        overflow: hidden;
+      }
+      .email-header {
+        background-color: <%= @branding&.primary_color.presence || PlatformBrand.primary_color %>;
+        padding: 20px;
+        text-align: center;
+      }
+      .email-header img {
+        max-height: 40px;
+        max-width: 200px;
+      }
+      .email-header .brand-name {
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0;
+      }
+      .email-content {
+        padding: 30px 20px;
+      }
+      h1 {
+        color: <%= @branding&.primary_color.presence || PlatformBrand.primary_color %>;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      h2 {
+        color: #495057;
+        font-size: 18px;
+        margin-top: 30px;
+        margin-bottom: 15px;
+      }
+      a {
+        color: <%= @branding&.primary_color.presence || PlatformBrand.primary_color %>;
+      }
+      .btn {
+        display: inline-block;
+        background-color: <%= @branding&.primary_color.presence || PlatformBrand.primary_color %>;
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+      code {
+        background-color: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+      .email-footer {
+        background-color: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+        border-top: 1px solid #e9ecef;
+      }
+      .email-footer p {
+        color: #6c757d;
+        font-size: 12px;
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="email-wrapper">
+      <!-- Header with Logo -->
+      <div class="email-header">
+        <% if @branding&.logo&.attached? %>
+          <%= image_tag url_for(@branding.logo), style: "max-height: 40px; max-width: 200px;", alt: "#{@organization&.name || PlatformBrand.name}" %>
+        <% else %>
+          <p class="brand-name"><%= @organization&.name || PlatformBrand.name %></p>
+        <% end %>
+      </div>
+
+      <!-- Main Content -->
+      <div class="email-content">
+        <%= yield %>
+      </div>
+
+      <!-- Footer -->
+      <div class="email-footer">
+        <p><%= @branding&.email_footer_text.presence || "Sent via #{PlatformBrand.name}" %></p>
+        <% if @branding&.show_powered_by? != false %>
+          <p><%= PlatformBrand.powered_by_text %></p>
+        <% end %>
+      </div>
+    </div>
+  </body>
+</html>

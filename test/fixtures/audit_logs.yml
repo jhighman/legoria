@@ -1,0 +1,46 @@
+# frozen_string_literal: true
+
+job_created:
+  organization: acme
+  user: admin
+  action: job.created
+  auditable_type: Job
+  auditable_id: 1
+  metadata:
+    title: Software Engineer
+  recorded_changes: {}
+  ip_address: "127.0.0.1"
+  request_id: "test-123"
+  created_at: <%= 1.hour.ago %>
+
+job_updated:
+  organization: acme
+  user: recruiter
+  action: job.updated
+  auditable_type: Job
+  auditable_id: 1
+  metadata:
+    title: Software Engineer
+  recorded_changes:
+    status:
+      - draft
+      - open
+  ip_address: "127.0.0.1"
+  request_id: "test-456"
+  created_at: <%= 30.minutes.ago %>
+
+application_stage_changed:
+  organization: acme
+  user: recruiter
+  action: application.stage_changed
+  auditable_type: Application
+  auditable_id: 1
+  metadata:
+    candidate_name: John Doe
+  recorded_changes:
+    current_stage_id:
+      - 1
+      - 2
+  ip_address: "192.168.1.1"
+  request_id: "test-789"
+  created_at: <%= 15.minutes.ago %>

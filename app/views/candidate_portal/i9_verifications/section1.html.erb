@@ -1,0 +1,140 @@
+<% content_for :title, "Complete I-9 Section 1" %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h1 class="h3 mb-2">I-9 Employment Eligibility Verification</h1>
+      <p class="text-muted mb-4">Section 1 - Employee Information and Attestation</p>
+
+      <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+          <strong>Important Information</strong>
+        </div>
+        <div class="card-body">
+          <p class="mb-2"><strong>Job:</strong> <%= @job.title %></p>
+          <p class="mb-2"><strong>Expected Start Date:</strong> <%= @i9_verification.employee_start_date&.strftime("%B %d, %Y") || "To be determined" %></p>
+          <p class="mb-0"><strong>Deadline:</strong> Section 1 must be completed by your first day of employment.</p>
+        </div>
+      </div>
+
+      <%= form_with model: @i9_verification, url: complete_section1_candidate_portal_i9_verification_path(@i9_verification), method: :post, local: true, class: "needs-validation" do |f| %>
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Citizenship/Immigration Status</h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-3">I attest, under penalty of perjury, that I am (select one):</p>
+
+            <div class="form-check mb-3">
+              <%= f.radio_button :citizenship_status, "citizen", class: "form-check-input", id: "status_citizen" %>
+              <%= f.label :citizenship_status, "A citizen of the United States", for: "status_citizen", class: "form-check-label" %>
+            </div>
+
+            <div class="form-check mb-3">
+              <%= f.radio_button :citizenship_status, "noncitizen_national", class: "form-check-input", id: "status_national" %>
+              <%= f.label :citizenship_status, "A noncitizen national of the United States", for: "status_national", class: "form-check-label" %>
+            </div>
+
+            <div class="form-check mb-3">
+              <%= f.radio_button :citizenship_status, "permanent_resident", class: "form-check-input", id: "status_lpr" %>
+              <%= f.label :citizenship_status, "A lawful permanent resident (Alien Registration Number/USCIS Number)", for: "status_lpr", class: "form-check-label" %>
+            </div>
+
+            <div class="form-check mb-3">
+              <%= f.radio_button :citizenship_status, "alien_authorized", class: "form-check-input", id: "status_alien" %>
+              <%= f.label :citizenship_status, "An alien authorized to work until (expiration date, if applicable)", for: "status_alien", class: "form-check-label" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional fields for non-citizens -->
+        <div class="card mb-4" id="alien_fields" style="display: none;">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Additional Information</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3" id="alien_number_field">
+                <%= f.label :alien_number, "Alien Registration Number/USCIS Number", class: "form-label" %>
+                <%= f.text_field :alien_number, class: "form-control", placeholder: "A-Number" %>
+              </div>
+
+              <div class="col-md-6 mb-3" id="expiration_field">
+                <%= f.label :alien_expiration_date, "Work Authorization Expiration Date", class: "form-label" %>
+                <%= f.date_field :alien_expiration_date, class: "form-control" %>
+              </div>
+            </div>
+
+            <p class="text-muted mb-2">Aliens authorized to work must provide one of the following (check one):</p>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <%= f.label :i94_number, "Form I-94 Admission Number", class: "form-label" %>
+                <%= f.text_field :i94_number, class: "form-control" %>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <%= f.label :foreign_passport_number, "Foreign Passport Number", class: "form-label" %>
+                <%= f.text_field :foreign_passport_number, class: "form-control" %>
+              </div>
+
+              <div class="col-md-6 mb-3" id="passport_country_field">
+                <%= f.label :foreign_passport_country, "Country of Issuance", class: "form-label" %>
+                <%= f.text_field :foreign_passport_country, class: "form-control" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attestation -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Attestation</h5>
+          </div>
+          <div class="card-body">
+            <div class="form-check mb-3">
+              <%= f.check_box :attestation_accepted, class: "form-check-input", id: "attestation" %>
+              <label class="form-check-label" for="attestation">
+                I attest, under penalty of perjury, that I am (check one of the above), that I have reviewed and understand the information and instructions provided in the <em>Instructions for Section 1</em>, and that the information I have provided is complete, true, and correct.
+              </label>
+            </div>
+
+            <div class="alert alert-warning">
+              <strong>Important:</strong> By submitting this form, you are providing an electronic signature. Your IP address and timestamp will be recorded.
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <%= link_to "Cancel", candidate_portal_dashboard_path, class: "btn btn-outline-secondary me-md-2" %>
+          <%= f.submit "Submit Section 1", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusRadios = document.querySelectorAll('input[name="i9_verification[citizenship_status]"]');
+    const alienFields = document.getElementById('alien_fields');
+    const alienNumberField = document.getElementById('alien_number_field');
+    const expirationField = document.getElementById('expiration_field');
+
+    function toggleFields() {
+      const selected = document.querySelector('input[name="i9_verification[citizenship_status]"]:checked');
+      if (!selected) return;
+
+      if (selected.value === 'permanent_resident' || selected.value === 'alien_authorized') {
+        alienFields.style.display = 'block';
+        alienNumberField.style.display = selected.value === 'permanent_resident' || selected.value === 'alien_authorized' ? 'block' : 'none';
+        expirationField.style.display = selected.value === 'alien_authorized' ? 'block' : 'none';
+      } else {
+        alienFields.style.display = 'none';
+      }
+    }
+
+    statusRadios.forEach(radio => radio.addEventListener('change', toggleFields));
+    toggleFields();
+  });
+</script>

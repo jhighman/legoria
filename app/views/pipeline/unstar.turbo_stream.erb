@@ -1,0 +1,4 @@
+<%# Update the application card with unstar state %>
+<%= turbo_stream.replace dom_id(@application) do %>
+  <%= render "pipeline/application_card", application: @application, job: @job %>
+<% end %>

@@ -1,0 +1,12 @@
+<div class="mb-4">
+  <h1 class="h3 mb-1">Edit Value</h1>
+  <p class="text-muted mb-0">Update lookup value for <%= @lookup_type.name %></p>
+</div>
+
+<%= render "form", lookup_value: @lookup_value %>
+
+<div class="mt-4">
+  <%= link_to admin_lookup_type_path(@lookup_type), class: "text-decoration-none" do %>
+    <i class="bi bi-arrow-left me-1"></i> Back to <%= @lookup_type.name %>
+  <% end %>
+</div>

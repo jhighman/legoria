@@ -1,0 +1,45 @@
+# frozen_string_literal: true
+
+google_integration:
+  user: recruiter
+  provider: google
+  calendar_id: primary
+  access_token_encrypted: encrypted_token_123
+  refresh_token_encrypted: encrypted_refresh_456
+  token_expires_at: <%= 1.hour.from_now %>
+  active: true
+  last_synced_at: <%= 10.minutes.ago %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+outlook_integration:
+  user: hiring_manager
+  provider: outlook
+  calendar_id: calendar-id-abc
+  access_token_encrypted: encrypted_token_789
+  refresh_token_encrypted: encrypted_refresh_012
+  token_expires_at: <%= 2.hours.from_now %>
+  active: true
+  last_synced_at: <%= 5.minutes.ago %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+expired_integration:
+  user: admin
+  provider: google
+  calendar_id: primary
+  access_token_encrypted: old_token
+  refresh_token_encrypted: old_refresh
+  token_expires_at: <%= 1.hour.ago %>
+  active: true
+  sync_error: Token expired
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 1.hour.ago %>
+
+inactive_integration:
+  user: inactive_user
+  provider: google
+  calendar_id: primary
+  active: false
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 30.days.ago %>

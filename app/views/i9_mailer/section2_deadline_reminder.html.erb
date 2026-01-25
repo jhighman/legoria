@@ -1,0 +1,55 @@
+<h1 style="color: #dc3545;">URGENT: I-9 Section 2 Deadline Approaching</h1>
+
+<p>Hello,</p>
+
+<p>
+  This is a reminder that the Section 2 deadline for <strong><%= @candidate.full_name %></strong>'s
+  I-9 form is approaching.
+</p>
+
+<h2>Deadline Information</h2>
+
+<table style="width: 100%; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Employee:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @candidate.full_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Position:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @job.title %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Section 2 Deadline:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee; color: #dc3545; font-weight: bold;"><%= @deadline&.strftime("%B %d, %Y") %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Days Remaining:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @days_remaining %> day(s)</td>
+  </tr>
+</table>
+
+<h2>Required Actions</h2>
+
+<p>To complete Section 2, you must:</p>
+
+<ol>
+  <li>Physically examine the employee's original identity and employment authorization documents</li>
+  <li>Verify the documents are genuine and relate to the employee</li>
+  <li>Record the document information in Section 2</li>
+  <li>Sign and date the form</li>
+</ol>
+
+<p style="margin-top: 20px; padding: 15px; background-color: #f8d7da; border-left: 4px solid #dc3545;">
+  <strong>Warning:</strong> Federal law requires employers to complete Section 2 within
+  3 business days of an employee's first day of work. Failure to comply may result
+  in civil penalties.
+</p>
+
+<p>
+  Please complete Section 2 as soon as possible.
+</p>
+
+<p>
+  Best regards,<br>
+  <%= PlatformBrand.name %> System
+</p>

@@ -1,0 +1,95 @@
+<% content_for :title, "Work Authorization - #{@work_authorization.candidate.full_name}" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Work Authorization</h1>
+    <p class="text-muted mb-0"><%= @candidate.full_name %></p>
+  </div>
+  <%= link_to "Back to List", admin_work_authorizations_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Authorization Details</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Type:</strong> <%= @work_authorization.authorization_type_label %></p>
+            <p><strong>Status:</strong>
+              <span class="badge bg-<%= @work_authorization.status_color %> fs-6">
+                <%= @work_authorization.status_label %>
+              </span>
+            </p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Valid From:</strong> <%= @work_authorization.valid_from&.strftime("%B %d, %Y") %></p>
+            <p><strong>Valid Until:</strong> <%= @work_authorization.indefinite? ? "Indefinite" : @work_authorization.valid_until&.strftime("%B %d, %Y") %></p>
+          </div>
+        </div>
+
+        <% unless @work_authorization.indefinite? %>
+          <div class="row mt-3">
+            <div class="col-12">
+              <% days = @work_authorization.days_until_expiration %>
+              <% if days && days > 0 %>
+                <div class="progress" style="height: 25px;">
+                  <div class="progress-bar bg-<%= days > 90 ? 'success' : days > 30 ? 'warning' : 'danger' %>"
+                       style="width: <%= [100, days / 3.65].min %>%">
+                    <%= days %> days remaining
+                  </div>
+                </div>
+              <% elsif @work_authorization.expired? %>
+                <div class="alert alert-danger mb-0">
+                  <strong>Expired:</strong> This work authorization expired on <%= @work_authorization.valid_until.strftime("%B %d, %Y") %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @i9_verification %>
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Related I-9 Verification</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Status:</strong> <%= @i9_verification.status.titleize.gsub("_", " ") %></p>
+          <p><strong>Verified:</strong> <%= @i9_verification.section2_completed_at&.strftime("%B %d, %Y") %></p>
+          <%= link_to "View I-9", admin_i9_verification_path(@i9_verification), class: "btn btn-outline-primary btn-sm" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Employee</h5>
+      </div>
+      <div class="card-body">
+        <p><strong>Name:</strong> <%= @candidate.full_name %></p>
+        <p><strong>Email:</strong> <%= @candidate.email %></p>
+        <%= link_to "View Profile", candidate_path(@candidate), class: "btn btn-outline-primary btn-sm" %>
+      </div>
+    </div>
+
+    <% if @work_authorization.needs_reverification? && !@work_authorization.indefinite? %>
+      <div class="card border-warning">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="card-title mb-0">Action Required</h5>
+        </div>
+        <div class="card-body">
+          <p>This work authorization requires reverification before expiration.</p>
+          <% if @i9_verification %>
+            <%= link_to "Complete Reverification", section3_admin_i9_verification_path(@i9_verification), class: "btn btn-warning" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

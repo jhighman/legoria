@@ -1,0 +1,49 @@
+<h1>Interview Scheduled</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>We're pleased to inform you that an interview has been scheduled for your application to the <strong><%= @job.title %></strong> position at <strong><%= @organization.name %></strong>.</p>
+
+<h2>Interview Details</h2>
+
+<table style="border-collapse: collapse; margin: 20px 0;">
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Date & Time:</td>
+    <td style="padding: 8px 0;"><%= @interview.scheduled_at_formatted %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Duration:</td>
+    <td style="padding: 8px 0;"><%= @interview.duration_formatted %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Type:</td>
+    <td style="padding: 8px 0;"><%= @interview.interview_type_label %></td>
+  </tr>
+  <% if @interview.location.present? %>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Location:</td>
+    <td style="padding: 8px 0;"><%= @interview.location %></td>
+  </tr>
+  <% end %>
+  <% if @interview.video_meeting_url.present? %>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Meeting Link:</td>
+    <td style="padding: 8px 0;"><%= link_to "Join Meeting", @interview.video_meeting_url %></td>
+  </tr>
+  <% end %>
+</table>
+
+<% if @interview.instructions.present? %>
+<h3>Additional Instructions</h3>
+<p><%= simple_format(@interview.instructions) %></p>
+<% end %>
+
+<p>Please make sure to be available at the scheduled time. If you need to reschedule, please contact us as soon as possible.</p>
+
+<p>
+  You can check your application status anytime at:<br>
+  <%= link_to @status_url, @status_url %>
+</p>
+
+<p>Best regards,<br>
+The <%= @organization.name %> Recruiting Team</p>

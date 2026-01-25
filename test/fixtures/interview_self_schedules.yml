@@ -1,0 +1,52 @@
+# frozen_string_literal: true
+
+pending_schedule:
+  interview: scheduled_interview
+  scheduling_starts_at: <%= Time.current %>
+  scheduling_ends_at: <%= 7.days.from_now %>
+  available_slots:
+    - start_time: <%= 2.days.from_now.iso8601 %>
+      end_time: <%= (2.days.from_now + 1.hour).iso8601 %>
+      available: true
+    - start_time: <%= 3.days.from_now.iso8601 %>
+      end_time: <%= (3.days.from_now + 1.hour).iso8601 %>
+      available: true
+  slot_duration_minutes: 60
+  buffer_minutes: 15
+  timezone: UTC
+  instructions: Please select a time that works best for you.
+  status: pending
+  token: <%= SecureRandom.urlsafe_base64(32) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+scheduled_self_schedule:
+  interview: confirmed_interview
+  scheduling_starts_at: <%= 5.days.ago %>
+  scheduling_ends_at: <%= 2.days.ago %>
+  available_slots:
+    - start_time: <%= 1.day.ago.iso8601 %>
+      end_time: <%= (1.day.ago + 1.hour).iso8601 %>
+      available: false
+  slot_duration_minutes: 60
+  buffer_minutes: 15
+  timezone: UTC
+  status: scheduled
+  selected_slot: <%= 1.day.ago %>
+  scheduled_at: <%= 3.days.ago %>
+  token: <%= SecureRandom.urlsafe_base64(32) %>
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 3.days.ago %>
+
+expired_schedule:
+  interview: cancelled_interview
+  scheduling_starts_at: <%= 10.days.ago %>
+  scheduling_ends_at: <%= 5.days.ago %>
+  available_slots: []
+  slot_duration_minutes: 60
+  buffer_minutes: 15
+  timezone: UTC
+  status: expired
+  token: <%= SecureRandom.urlsafe_base64(32) %>
+  created_at: <%= 10.days.ago %>
+  updated_at: <%= 5.days.ago %>

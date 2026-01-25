@@ -1,0 +1,48 @@
+<h1>Interview Rescheduled</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>Your interview for the <strong><%= @job.title %></strong> position at <strong><%= @organization.name %></strong> has been rescheduled.</p>
+
+<% if @reason.present? %>
+<p><strong>Reason:</strong> <%= @reason %></p>
+<% end %>
+
+<h2>New Interview Details</h2>
+
+<table style="border-collapse: collapse; margin: 20px 0;">
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Previous Time:</td>
+    <td style="padding: 8px 0; text-decoration: line-through; color: #888;"><%= @original_time.in_time_zone(@interview.timezone).strftime("%B %d, %Y at %I:%M %p %Z") %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">New Date & Time:</td>
+    <td style="padding: 8px 0; color: #0066cc; font-weight: bold;"><%= @interview.scheduled_at_formatted %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Duration:</td>
+    <td style="padding: 8px 0;"><%= @interview.duration_formatted %></td>
+  </tr>
+  <% if @interview.location.present? %>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Location:</td>
+    <td style="padding: 8px 0;"><%= @interview.location %></td>
+  </tr>
+  <% end %>
+  <% if @interview.video_meeting_url.present? %>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Meeting Link:</td>
+    <td style="padding: 8px 0;"><%= link_to "Join Meeting", @interview.video_meeting_url %></td>
+  </tr>
+  <% end %>
+</table>
+
+<p>We apologize for any inconvenience. Please contact us if you have any questions.</p>
+
+<p>
+  You can check your application status anytime at:<br>
+  <%= link_to @status_url, @status_url %>
+</p>
+
+<p>Best regards,<br>
+The <%= @organization.name %> Recruiting Team</p>

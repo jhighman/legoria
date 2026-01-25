@@ -1,0 +1,67 @@
+# frozen_string_literal: true
+
+applied:
+  organization: acme
+  name: Applied
+  stage_type: applied
+  position: 0
+  color: "#3B82F6"
+  is_default: true
+  is_terminal: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+screening:
+  organization: acme
+  name: Phone Screen
+  stage_type: screening
+  position: 1
+  color: "#8B5CF6"
+  is_default: true
+  is_terminal: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+interview:
+  organization: acme
+  name: On-site Interview
+  stage_type: interview
+  position: 2
+  color: "#F59E0B"
+  is_default: true
+  is_terminal: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+offer:
+  organization: acme
+  name: Offer
+  stage_type: offer
+  position: 3
+  color: "#10B981"
+  is_default: true
+  is_terminal: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+hired:
+  organization: acme
+  name: Hired
+  stage_type: hired
+  position: 4
+  color: "#22C55E"
+  is_default: true
+  is_terminal: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+rejected:
+  organization: acme
+  name: Rejected
+  stage_type: rejected
+  position: 5
+  color: "#EF4444"
+  is_default: true
+  is_terminal: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

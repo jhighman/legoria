@@ -1,0 +1,53 @@
+# SA-09/SA-11: Background check fixtures
+
+pending_check:
+  organization: acme
+  application: active_application
+  candidate: john_doe
+  integration: checkr_integration
+  requested_by: admin
+  external_id: chk_pending_123
+  package: basic
+  check_types:
+    - criminal
+    - identity
+  status: pending
+  estimated_days: 3
+  created_at: <%= 1.day.ago %>
+
+consent_required_check:
+  organization: acme
+  application: new_application
+  candidate: jane_smith
+  integration: checkr_integration
+  requested_by: admin
+  external_id: chk_consent_456
+  package: comprehensive
+  check_types:
+    - criminal
+    - employment
+    - education
+  status: consent_required
+  consent_requested_at: <%= 2.hours.ago %>
+  consent_method: email
+  estimated_days: 5
+  created_at: <%= 2.days.ago %>
+
+in_progress_check:
+  organization: acme
+  application: rejected_application
+  candidate: inactive_candidate
+  integration: checkr_integration
+  requested_by: admin
+  external_id: chk_progress_789
+  external_url: https://checkr.com/checks/789
+  package: basic
+  check_types:
+    - criminal
+  status: in_progress
+  consent_given_at: <%= 1.day.ago %>
+  consent_method: portal
+  submitted_at: <%= 1.day.ago %>
+  started_at: <%= 23.hours.ago %>
+  estimated_days: 2
+  created_at: <%= 3.days.ago %>

@@ -1,0 +1,20 @@
+<%# Renders a status badge for an application %>
+<%
+  badge_class = case application.status.to_s
+  when "applied", "new"
+    "bg-primary"
+  when "screening", "phone_screen"
+    "bg-info"
+  when "interview", "interviewing"
+    "bg-warning text-dark"
+  when "offer", "offer_extended"
+    "bg-success"
+  when "hired"
+    "bg-success"
+  when "rejected", "withdrawn"
+    "bg-danger"
+  else
+    "bg-secondary"
+  end
+%>
+<span class="badge <%= badge_class %>"><%= application.status_label %></span>

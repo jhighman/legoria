@@ -1,0 +1,51 @@
+# SA-01: SSO configuration fixtures
+
+acme_saml:
+  organization: acme
+  provider: saml
+  issuer_url: https://idp.acme.example.com
+  saml_entity_id: https://idp.acme.example.com/saml/metadata
+  saml_sso_url: https://idp.acme.example.com/saml/sso
+  saml_slo_url: https://idp.acme.example.com/saml/slo
+  saml_fingerprint: "AB:CD:EF:12:34:56:78:90:AB:CD:EF:12:34:56:78:90:AB:CD:EF:12"
+  saml_fingerprint_algorithm: sha256
+  attribute_mapping: '{"email": "email", "first_name": "givenName", "last_name": "sn"}'
+  auto_provision_users: true
+  allowed_domains:
+    - acme.example.com
+  enforce_sso: false
+  enabled: true
+  login_count: 150
+  last_login_at: <%= 1.hour.ago %>
+  metadata: '{}'
+
+acme_oidc:
+  organization: acme
+  provider: oidc
+  issuer_url: https://accounts.google.com
+  client_id: client_123456
+  oidc_discovery_url: https://accounts.google.com/.well-known/openid-configuration
+  oidc_authorization_endpoint: https://accounts.google.com/o/oauth2/v2/auth
+  oidc_token_endpoint: https://oauth2.googleapis.com/token
+  oidc_userinfo_endpoint: https://openidconnect.googleapis.com/v1/userinfo
+  oidc_jwks_uri: https://www.googleapis.com/oauth2/v3/certs
+  oidc_scopes: "openid profile email"
+  attribute_mapping: '{"email": "email", "first_name": "given_name", "last_name": "family_name"}'
+  auto_provision_users: false
+  enforce_sso: false
+  enabled: false
+  debug_mode: true
+  metadata: '{}'
+
+globex_saml:
+  organization: globex
+  provider: saml
+  issuer_url: https://idp.globex.example.com
+  saml_entity_id: https://idp.globex.example.com/saml
+  saml_sso_url: https://idp.globex.example.com/saml/sso
+  saml_fingerprint_algorithm: sha256
+  auto_provision_users: true
+  enforce_sso: true
+  enabled: true
+  login_count: 45
+  metadata: '{}'

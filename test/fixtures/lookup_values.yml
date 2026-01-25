@@ -1,0 +1,294 @@
+# frozen_string_literal: true
+
+# Acme employment types
+acme_full_time:
+  lookup_type: acme_employment_type
+  code: full_time
+  translations: '{"en": {"name": "Full-time"}}'
+  position: 0
+  is_default: true
+  active: true
+
+acme_part_time:
+  lookup_type: acme_employment_type
+  code: part_time
+  translations: '{"en": {"name": "Part-time"}}'
+  position: 1
+  active: true
+
+acme_contract:
+  lookup_type: acme_employment_type
+  code: contract
+  translations: '{"en": {"name": "Contract"}}'
+  position: 2
+  active: true
+
+acme_intern:
+  lookup_type: acme_employment_type
+  code: intern
+  translations: '{"en": {"name": "Internship"}}'
+  position: 3
+  active: true
+
+acme_temporary:
+  lookup_type: acme_employment_type
+  code: temporary
+  translations: '{"en": {"name": "Temporary"}}'
+  position: 4
+  active: true
+
+# Acme location types
+acme_onsite:
+  lookup_type: acme_location_type
+  code: onsite
+  translations: '{"en": {"name": "On-site"}}'
+  position: 0
+  active: true
+
+acme_remote:
+  lookup_type: acme_location_type
+  code: remote
+  translations: '{"en": {"name": "Remote"}}'
+  position: 1
+  active: true
+
+acme_hybrid:
+  lookup_type: acme_location_type
+  code: hybrid
+  translations: '{"en": {"name": "Hybrid"}}'
+  position: 2
+  is_default: true
+  active: true
+
+# Acme application sources
+acme_career_site:
+  lookup_type: acme_application_source
+  code: career_site
+  translations: '{"en": {"name": "Career Site"}}'
+  position: 0
+  is_default: true
+  active: true
+
+acme_job_board:
+  lookup_type: acme_application_source
+  code: job_board
+  translations: '{"en": {"name": "Job Board"}}'
+  position: 1
+  active: true
+
+acme_referral:
+  lookup_type: acme_application_source
+  code: referral
+  translations: '{"en": {"name": "Referral"}}'
+  position: 2
+  active: true
+
+acme_agency:
+  lookup_type: acme_application_source
+  code: agency
+  translations: '{"en": {"name": "Agency"}}'
+  position: 3
+  active: true
+
+acme_direct:
+  lookup_type: acme_application_source
+  code: direct
+  translations: '{"en": {"name": "Direct Application"}}'
+  position: 4
+  active: true
+
+acme_linkedin:
+  lookup_type: acme_application_source
+  code: linkedin
+  translations: '{"en": {"name": "LinkedIn"}}'
+  position: 5
+  active: true
+
+acme_other:
+  lookup_type: acme_application_source
+  code: other
+  translations: '{"en": {"name": "Other"}}'
+  position: 6
+  active: true
+
+# Acme note visibility
+acme_private:
+  lookup_type: acme_note_visibility
+  code: private
+  translations: '{"en": {"name": "Private", "description": "Only visible to you"}}'
+  position: 0
+  active: true
+
+acme_team:
+  lookup_type: acme_note_visibility
+  code: team
+  translations: '{"en": {"name": "Team", "description": "Visible to all recruiters"}}'
+  position: 1
+  is_default: true
+  active: true
+
+acme_hiring_team:
+  lookup_type: acme_note_visibility
+  code: hiring_team
+  translations: '{"en": {"name": "Hiring Team", "description": "Visible to job hiring team"}}'
+  position: 2
+  active: true
+
+# Globex employment types
+globex_full_time:
+  lookup_type: globex_employment_type
+  code: full_time
+  translations: '{"en": {"name": "Full-time"}}'
+  position: 0
+  is_default: true
+  active: true
+
+globex_part_time:
+  lookup_type: globex_employment_type
+  code: part_time
+  translations: '{"en": {"name": "Part-time"}}'
+  position: 1
+  active: true
+
+globex_contract:
+  lookup_type: globex_employment_type
+  code: contract
+  translations: '{"en": {"name": "Contract"}}'
+  position: 2
+  active: true
+
+globex_intern:
+  lookup_type: globex_employment_type
+  code: intern
+  translations: '{"en": {"name": "Internship"}}'
+  position: 3
+  active: true
+
+globex_temporary:
+  lookup_type: globex_employment_type
+  code: temporary
+  translations: '{"en": {"name": "Temporary"}}'
+  position: 4
+  active: true
+
+# Globex location types
+globex_onsite:
+  lookup_type: globex_location_type
+  code: onsite
+  translations: '{"en": {"name": "On-site"}}'
+  position: 0
+  active: true
+
+globex_remote:
+  lookup_type: globex_location_type
+  code: remote
+  translations: '{"en": {"name": "Remote"}}'
+  position: 1
+  active: true
+
+globex_hybrid:
+  lookup_type: globex_location_type
+  code: hybrid
+  translations: '{"en": {"name": "Hybrid"}}'
+  position: 2
+  is_default: true
+  active: true
+
+# Globex application sources
+globex_career_site:
+  lookup_type: globex_application_source
+  code: career_site
+  translations: '{"en": {"name": "Career Site"}}'
+  position: 0
+  is_default: true
+  active: true
+
+globex_job_board:
+  lookup_type: globex_application_source
+  code: job_board
+  translations: '{"en": {"name": "Job Board"}}'
+  position: 1
+  active: true
+
+globex_referral:
+  lookup_type: globex_application_source
+  code: referral
+  translations: '{"en": {"name": "Referral"}}'
+  position: 2
+  active: true
+
+globex_agency:
+  lookup_type: globex_application_source
+  code: agency
+  translations: '{"en": {"name": "Agency"}}'
+  position: 3
+  active: true
+
+globex_direct:
+  lookup_type: globex_application_source
+  code: direct
+  translations: '{"en": {"name": "Direct Application"}}'
+  position: 4
+  active: true
+
+globex_linkedin:
+  lookup_type: globex_application_source
+  code: linkedin
+  translations: '{"en": {"name": "LinkedIn"}}'
+  position: 5
+  active: true
+
+globex_other:
+  lookup_type: globex_application_source
+  code: other
+  translations: '{"en": {"name": "Other"}}'
+  position: 6
+  active: true
+
+# Globex note visibility
+globex_private:
+  lookup_type: globex_note_visibility
+  code: private
+  translations: '{"en": {"name": "Private", "description": "Only visible to you"}}'
+  position: 0
+  active: true
+
+globex_team:
+  lookup_type: globex_note_visibility
+  code: team
+  translations: '{"en": {"name": "Team", "description": "Visible to all recruiters"}}'
+  position: 1
+  is_default: true
+  active: true
+
+globex_hiring_team:
+  lookup_type: globex_note_visibility
+  code: hiring_team
+  translations: '{"en": {"name": "Hiring Team", "description": "Visible to job hiring team"}}'
+  position: 2
+  active: true
+
+# Inactive org - minimal values
+inactive_full_time:
+  lookup_type: inactive_employment_type
+  code: full_time
+  translations: '{"en": {"name": "Full-time"}}'
+  position: 0
+  is_default: true
+  active: true
+
+inactive_onsite:
+  lookup_type: inactive_location_type
+  code: onsite
+  translations: '{"en": {"name": "On-site"}}'
+  position: 0
+  is_default: true
+  active: true
+
+inactive_career_site:
+  lookup_type: inactive_application_source
+  code: career_site
+  translations: '{"en": {"name": "Career Site"}}'
+  position: 0
+  is_default: true
+  active: true

@@ -1,0 +1,181 @@
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <div class="d-flex align-items-center mb-1">
+      <h1 class="h3 mb-0"><%= @job.title %></h1>
+      <div class="ms-3">
+        <%= render partial: "status_badge", locals: { status: @job.status } %>
+      </div>
+    </div>
+    <p class="text-muted mb-0">
+      <%= @job.department&.name || "No Department" %> &middot;
+      <%= @job.location_type.humanize %> &middot;
+      <%= @job.employment_type.humanize %>
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <% if policy(@job).update? && @job.editable? %>
+      <%= link_to edit_job_path(@job), class: "btn btn-outline-secondary btn-sm" do %>
+        <i class="bi bi-pencil me-1"></i> Edit
+      <% end %>
+    <% end %>
+
+    <% if policy(@job).duplicate? %>
+      <%= button_to duplicate_job_path(@job), method: :post, class: "btn btn-outline-secondary btn-sm" do %>
+        <i class="bi bi-copy me-1"></i> Duplicate
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<!-- Workflow Actions -->
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="d-flex flex-wrap gap-2">
+      <% if policy(@job).submit_for_approval? && @job.can_submit_for_approval? %>
+        <%= button_to submit_for_approval_job_path(@job), method: :post, class: "btn btn-primary" do %>
+          <i class="bi bi-send me-1"></i> Submit for Approval
+        <% end %>
+      <% end %>
+
+      <% if policy(@job).approve? && @job.pending_approval? %>
+        <%= button_to approve_job_path(@job), method: :post, class: "btn btn-success" do %>
+          <i class="bi bi-check-circle me-1"></i> Approve
+        <% end %>
+        <%= button_to reject_job_path(@job), method: :post, class: "btn btn-danger" do %>
+          <i class="bi bi-x-circle me-1"></i> Reject
+        <% end %>
+      <% end %>
+
+      <% if policy(@job).put_on_hold? && @job.can_put_on_hold? %>
+        <%= button_to put_on_hold_job_path(@job), method: :post, class: "btn btn-outline-secondary" do %>
+          <i class="bi bi-pause-circle me-1"></i> Put on Hold
+        <% end %>
+      <% end %>
+
+      <% if policy(@job).close? && @job.can_close? %>
+        <%= button_to close_job_path(@job, close_reason: :filled), method: :post, class: "btn btn-outline-secondary" do %>
+          <i class="bi bi-check2-square me-1"></i> Close (Filled)
+        <% end %>
+      <% end %>
+
+      <% if policy(@job).reopen? && @job.can_reopen? %>
+        <%= button_to reopen_job_path(@job), method: :post, class: "btn btn-primary" do %>
+          <i class="bi bi-arrow-counterclockwise me-1"></i> Reopen
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Job Details -->
+<div class="row g-4">
+  <!-- Main Content -->
+  <div class="col-lg-8">
+    <% if @job.description.present? %>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Description</h5>
+          <div class="text-muted">
+            <%= simple_format(@job.description) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @job.requirements.present? %>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Requirements</h5>
+          <div class="text-muted">
+            <%= simple_format(@job.requirements) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @job.internal_notes.present? %>
+      <div class="card mb-4 border-start border-warning border-4">
+        <div class="card-body">
+          <h5 class="card-title">Internal Notes</h5>
+          <div class="text-muted">
+            <%= simple_format(@job.internal_notes) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="col-lg-4">
+    <!-- Job Info -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Job Details</h5>
+        <dl class="mb-0">
+          <dt class="text-muted small">Department</dt>
+          <dd class="mb-3"><%= @job.department&.name || "Not assigned" %></dd>
+
+          <dt class="text-muted small">Location</dt>
+          <dd class="mb-3"><%= @job.location.presence || @job.location_type.humanize %></dd>
+
+          <dt class="text-muted small">Employment Type</dt>
+          <dd class="mb-3"><%= @job.employment_type.humanize %></dd>
+
+          <dt class="text-muted small">Headcount</dt>
+          <dd class="mb-3"><%= @job.filled_count %> / <%= @job.headcount %> filled</dd>
+
+          <% if @job.salary_range %>
+            <dt class="text-muted small">Salary Range</dt>
+            <dd class="mb-0"><%= @job.salary_range %></dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Team -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Team</h5>
+        <dl class="mb-0">
+          <dt class="text-muted small">Hiring Manager</dt>
+          <dd class="mb-3"><%= @job.hiring_manager&.display_name || "Not assigned" %></dd>
+
+          <dt class="text-muted small">Recruiter</dt>
+          <dd class="mb-0"><%= @job.recruiter&.display_name || "Not assigned" %></dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Timeline</h5>
+        <dl class="mb-0">
+          <dt class="text-muted small">Created</dt>
+          <dd class="mb-3"><%= @job.created_at.strftime("%B %d, %Y") %></dd>
+
+          <% if @job.opened_at %>
+            <dt class="text-muted small">Opened</dt>
+            <dd class="mb-3"><%= @job.opened_at.strftime("%B %d, %Y") %></dd>
+          <% end %>
+
+          <% if @job.closed_at %>
+            <dt class="text-muted small">Closed</dt>
+            <dd class="mb-0">
+              <%= @job.closed_at.strftime("%B %d, %Y") %>
+              <% if @job.close_reason %>
+                (<%= @job.close_reason.humanize %>)
+              <% end %>
+            </dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3">
+  <%= link_to jobs_path, class: "text-decoration-none" do %>
+    <i class="bi bi-arrow-left me-1"></i> Back to Jobs
+  <% end %>
+</div>

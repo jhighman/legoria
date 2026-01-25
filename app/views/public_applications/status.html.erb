@@ -1,0 +1,208 @@
+<% content_for(:title) { "Application Status" } %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Status Header -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h4 class="mb-1"><%= @application.job.title %></h4>
+              <p class="text-muted mb-2">
+                <i class="bi bi-building me-1"></i> <%= @application.job.organization.name %>
+                <% if @application.job.department %>
+                  &bull; <%= @application.job.department.name %>
+                <% end %>
+              </p>
+              <p class="text-muted small mb-0">
+                <i class="bi bi-calendar me-1"></i>
+                Applied on <%= @application.applied_at.strftime("%B %d, %Y") %>
+              </p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+              <% case @application.status %>
+              <% when "new", "screening", "interviewing", "assessment", "background_check" %>
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                  <i class="bi bi-hourglass-split me-1"></i> In Progress
+                </span>
+              <% when "offered" %>
+                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                  <i class="bi bi-envelope-paper me-1"></i> Offer Extended
+                </span>
+              <% when "hired" %>
+                <span class="badge bg-success fs-6 px-3 py-2">
+                  <i class="bi bi-check-circle me-1"></i> Hired
+                </span>
+              <% when "rejected" %>
+                <span class="badge bg-danger fs-6 px-3 py-2">
+                  <i class="bi bi-x-circle me-1"></i> Not Selected
+                </span>
+              <% when "withdrawn" %>
+                <span class="badge bg-secondary fs-6 px-3 py-2">
+                  <i class="bi bi-dash-circle me-1"></i> Withdrawn
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Status Details -->
+      <div class="card mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-info-circle me-2"></i>Current Status
+          </h5>
+        </div>
+        <div class="card-body">
+          <% case @application.status %>
+          <% when "new" %>
+            <div class="alert alert-info mb-0">
+              <h6 class="alert-heading"><i class="bi bi-inbox me-2"></i>Application Received</h6>
+              <p class="mb-0">
+                Your application has been received and is being reviewed by our recruiting team.
+                We will be in touch if your qualifications match our requirements.
+              </p>
+            </div>
+          <% when "screening" %>
+            <div class="alert alert-info mb-0">
+              <h6 class="alert-heading"><i class="bi bi-file-earmark-text me-2"></i>Under Review</h6>
+              <p class="mb-0">
+                Your application is currently being reviewed by our recruiting team.
+                We appreciate your patience during this process.
+              </p>
+            </div>
+          <% when "interviewing" %>
+            <div class="alert alert-primary mb-0">
+              <h6 class="alert-heading"><i class="bi bi-people me-2"></i>Interview Stage</h6>
+              <p class="mb-0">
+                Congratulations! You've advanced to the interview stage.
+                Our team will be reaching out to schedule your interview.
+              </p>
+            </div>
+          <% when "assessment" %>
+            <div class="alert alert-primary mb-0">
+              <h6 class="alert-heading"><i class="bi bi-clipboard-check me-2"></i>Assessment Stage</h6>
+              <p class="mb-0">
+                You're in the assessment stage of our hiring process.
+                Please check your email for any assessments or tasks.
+              </p>
+            </div>
+          <% when "background_check" %>
+            <div class="alert alert-info mb-0">
+              <h6 class="alert-heading"><i class="bi bi-shield-check me-2"></i>Background Check</h6>
+              <p class="mb-0">
+                Your application is in the final stages. A background check is in progress.
+              </p>
+            </div>
+          <% when "offered" %>
+            <div class="alert alert-warning mb-0">
+              <h6 class="alert-heading"><i class="bi bi-envelope-paper me-2"></i>Offer Extended</h6>
+              <p class="mb-0">
+                Congratulations! An offer has been extended to you.
+                Please check your email for details and next steps.
+              </p>
+            </div>
+          <% when "hired" %>
+            <div class="alert alert-success mb-0">
+              <h6 class="alert-heading"><i class="bi bi-trophy me-2"></i>Welcome to the Team!</h6>
+              <p class="mb-0">
+                Congratulations on your new position! We're excited to have you join us.
+                Check your email for onboarding information.
+              </p>
+            </div>
+          <% when "rejected" %>
+            <div class="alert alert-secondary mb-0">
+              <h6 class="alert-heading"><i class="bi bi-envelope me-2"></i>Application Update</h6>
+              <p class="mb-0">
+                Thank you for your interest in this position. After careful consideration,
+                we have decided to move forward with other candidates whose experience more
+                closely matches our current needs. We encourage you to apply for future
+                opportunities that match your skills.
+              </p>
+            </div>
+          <% when "withdrawn" %>
+            <div class="alert alert-secondary mb-0">
+              <h6 class="alert-heading"><i class="bi bi-x-circle me-2"></i>Application Withdrawn</h6>
+              <p class="mb-0">
+                This application has been withdrawn. If you're still interested in opportunities
+                with us, please feel free to browse our current openings.
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="card mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-clock-history me-2"></i>Application Timeline
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="timeline">
+            <% timeline_events = [] %>
+
+            <%# Add application submitted event %>
+            <% timeline_events << { date: @application.applied_at, title: "Application Submitted", description: "Your application was received", icon: "bi-send", color: "primary" } %>
+
+            <%# Add stage transitions %>
+            <% @application.stage_transitions.order(created_at: :asc).each do |transition| %>
+              <% timeline_events << { date: transition.created_at, title: "Moved to #{transition.to_stage.name}", description: transition.notes, icon: "bi-arrow-right-circle", color: "info" } %>
+            <% end %>
+
+            <%# Add terminal events %>
+            <% if @application.hired_at %>
+              <% timeline_events << { date: @application.hired_at, title: "Hired", description: "Congratulations!", icon: "bi-trophy", color: "success" } %>
+            <% end %>
+            <% if @application.rejected_at %>
+              <% timeline_events << { date: @application.rejected_at, title: "Decision Made", description: "Application closed", icon: "bi-envelope", color: "secondary" } %>
+            <% end %>
+            <% if @application.withdrawn_at %>
+              <% timeline_events << { date: @application.withdrawn_at, title: "Withdrawn", description: "Application withdrawn", icon: "bi-x-circle", color: "secondary" } %>
+            <% end %>
+
+            <% timeline_events.sort_by { |e| e[:date] }.reverse.each_with_index do |event, index| %>
+              <div class="d-flex mb-<%= index == timeline_events.length - 1 ? '0' : '4' %>">
+                <div class="me-3">
+                  <div class="rounded-circle bg-<%= event[:color] %> text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="bi <%= event[:icon] %>"></i>
+                  </div>
+                </div>
+                <div>
+                  <h6 class="mb-1"><%= event[:title] %></h6>
+                  <p class="text-muted small mb-0">
+                    <%= event[:date].strftime("%B %d, %Y at %I:%M %p") %>
+                  </p>
+                  <% if event[:description].present? %>
+                    <p class="text-muted small mb-0"><%= event[:description] %></p>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tracking Info -->
+      <div class="card bg-light">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <p class="mb-1 text-muted small">Your tracking code:</p>
+              <code class="fs-5"><%= @application.tracking_token %></code>
+              <p class="text-muted small mb-0 mt-1">Save this code to check your status anytime.</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+              <%= link_to careers_path, class: "btn btn-outline-primary" do %>
+                <i class="bi bi-briefcase me-1"></i> View More Jobs
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

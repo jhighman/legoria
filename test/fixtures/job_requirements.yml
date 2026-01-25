@@ -1,0 +1,88 @@
+# Phase 5: Job requirement fixtures
+
+ruby_required:
+  organization: acme
+  job: draft_job
+  requirement_type: skill
+  name: Ruby
+  normalized_name: ruby
+  importance: required
+  weight: 10
+  position: 0
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.month.ago %>
+
+rails_required:
+  organization: acme
+  job: draft_job
+  requirement_type: skill
+  name: Rails
+  normalized_name: rails
+  importance: required
+  weight: 10
+  position: 1
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.month.ago %>
+
+postgresql_preferred:
+  organization: acme
+  job: draft_job
+  requirement_type: skill
+  name: PostgreSQL
+  normalized_name: postgresql
+  importance: preferred
+  weight: 7
+  position: 2
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.month.ago %>
+
+kubernetes_nice:
+  organization: acme
+  job: draft_job
+  requirement_type: skill
+  name: Kubernetes
+  normalized_name: kubernetes
+  importance: nice_to_have
+  weight: 3
+  position: 3
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.month.ago %>
+
+experience_5_years:
+  organization: acme
+  job: draft_job
+  requirement_type: experience
+  name: 5+ Years Experience
+  normalized_name: 5+ years experience
+  importance: required
+  weight: 8
+  min_years: 5
+  position: 4
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.month.ago %>
+
+bachelor_degree:
+  organization: acme
+  job: draft_job
+  requirement_type: education
+  name: Bachelor's Degree
+  normalized_name: bachelor's degree
+  importance: preferred
+  weight: 5
+  education_level: bachelor
+  field_of_study: Computer Science
+  position: 5
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.month.ago %>
+
+aws_certification:
+  organization: acme
+  job: draft_job
+  requirement_type: certification
+  name: AWS Solutions Architect
+  normalized_name: aws solutions architect
+  importance: nice_to_have
+  weight: 4
+  position: 6
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.month.ago %>

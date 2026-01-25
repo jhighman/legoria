@@ -1,0 +1,35 @@
+# frozen_string_literal: true
+
+acme:
+  name: Acme Corporation
+  subdomain: acme
+  settings: '{}'
+  timezone: America/New_York
+  default_currency: USD
+  default_locale: en
+  plan: professional
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+globex:
+  name: Globex Industries
+  subdomain: globex
+  settings: '{}'
+  timezone: America/Los_Angeles
+  default_currency: USD
+  default_locale: en
+  plan: professional
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_org:
+  name: Inactive Corp
+  subdomain: inactive
+  settings: '{}'
+  timezone: UTC
+  default_currency: USD
+  default_locale: en
+  plan: trial
+  discarded_at: <%= Time.current %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

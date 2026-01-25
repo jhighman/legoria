@@ -1,0 +1,158 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Audit Logs</h1>
+    <p class="text-muted mb-0">View all system activity and changes</p>
+  </div>
+  <div class="text-muted">
+    <i class="bi bi-shield-check me-1"></i>
+    <%= number_with_delimiter(@total_count) %> total records
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: admin_audit_logs_path, method: :get, local: true, class: "row g-3 align-items-end" do %>
+      <div class="col-md-2">
+        <label class="form-label">Action</label>
+        <%= select_tag :action_filter,
+            options_for_select([["All Actions", ""]] + @action_options.map { |a| [a.titleize, a] }, params[:action_filter]),
+            class: "form-select form-select-sm" %>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">User</label>
+        <%= select_tag :user_id,
+            options_for_select([["All Users", ""]] + @user_options.map { |u| [u.display_name, u.id] }, params[:user_id]),
+            class: "form-select form-select-sm" %>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Type</label>
+        <%= select_tag :auditable_type,
+            options_for_select([["All Types", ""]] + @auditable_types.map { |t| [t, t] }, params[:auditable_type]),
+            class: "form-select form-select-sm" %>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">From Date</label>
+        <%= date_field_tag :start_date, params[:start_date], class: "form-control form-control-sm" %>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">To Date</label>
+        <%= date_field_tag :end_date, params[:end_date], class: "form-control form-control-sm" %>
+      </div>
+      <div class="col-md-2">
+        <%= submit_tag "Filter", class: "btn btn-sm btn-outline-secondary" %>
+        <%= link_to "Clear", admin_audit_logs_path, class: "btn btn-sm btn-link" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Audit Logs Table -->
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 table-sm">
+      <thead class="table-light">
+        <tr>
+          <th>Timestamp</th>
+          <th>Action</th>
+          <th>Record</th>
+          <th>User</th>
+          <th>Changes</th>
+          <th class="text-end">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @audit_logs.each do |log| %>
+          <tr>
+            <td class="text-muted small">
+              <span title="<%= log.created_at.strftime('%Y-%m-%d %H:%M:%S') %>">
+                <%= time_ago_in_words(log.created_at) %> ago
+              </span>
+            </td>
+            <td>
+              <span class="badge <%= action_badge_class(log.action) %>">
+                <%= log.action_label %>
+              </span>
+              <small class="text-muted d-block"><%= log.action_category %></small>
+            </td>
+            <td>
+              <span class="fw-medium"><%= log.auditable_type %></span>
+              <small class="text-muted d-block"><%= log.auditable_display_name %></small>
+            </td>
+            <td>
+              <% if log.user %>
+                <div class="d-flex align-items-center">
+                  <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px; font-size: 0.7rem;">
+                    <%= log.user.first_name[0] %><%= log.user.last_name[0] %>
+                  </div>
+                  <span class="small"><%= log.user.display_name %></span>
+                </div>
+              <% else %>
+                <span class="text-muted small">System</span>
+              <% end %>
+            </td>
+            <td class="small" style="max-width: 300px;">
+              <% if log.recorded_changes.present? %>
+                <span class="text-truncate d-inline-block" style="max-width: 280px;" title="<%= log.recorded_changes_summary %>">
+                  <%= truncate(log.recorded_changes_summary, length: 80) %>
+                </span>
+              <% else %>
+                <span class="text-muted">-</span>
+              <% end %>
+            </td>
+            <td class="text-end">
+              <%= link_to admin_audit_log_path(log), class: "btn btn-sm btn-outline-secondary" do %>
+                <i class="bi bi-eye"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        <% if @audit_logs.empty? %>
+          <tr>
+            <td colspan="6" class="text-center py-5">
+              <i class="bi bi-shield-check fs-1 text-muted d-block mb-3"></i>
+              <h5>No audit logs found</h5>
+              <p class="text-muted">Try adjusting your filters</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if @total_count > @per_page %>
+    <div class="card-footer bg-white">
+      <nav>
+        <ul class="pagination pagination-sm justify-content-center mb-0">
+          <% total_pages = (@total_count.to_f / @per_page).ceil %>
+          <% if @page > 1 %>
+            <li class="page-item">
+              <%= link_to admin_audit_logs_path(page: @page - 1, **filter_params), class: "page-link" do %>
+                <i class="bi bi-chevron-left"></i>
+              <% end %>
+            </li>
+          <% end %>
+
+          <% [1, @page - 1, @page, @page + 1, total_pages].uniq.select { |p| p > 0 && p <= total_pages }.each_with_index do |p, i| %>
+            <% if i > 0 && p > prev_shown + 1 %>
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+            <% end %>
+            <li class="page-item <%= 'active' if p == @page %>">
+              <%= link_to p, admin_audit_logs_path(page: p, **filter_params), class: "page-link" %>
+            </li>
+            <% prev_shown = p %>
+          <% end %>
+
+          <% if @page < total_pages %>
+            <li class="page-item">
+              <%= link_to admin_audit_logs_path(page: @page + 1, **filter_params), class: "page-link" do %>
+                <i class="bi bi-chevron-right"></i>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+  <% end %>
+</div>

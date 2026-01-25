@@ -1,0 +1,16 @@
+<h1>Interview Cancelled</h1>
+
+<p>Hi <%= @user.first_name %>,</p>
+
+<p>The interview with <strong><%= @candidate.full_name %></strong> for the <strong><%= @job.title %></strong> position has been cancelled.</p>
+
+<% if @reason.present? %>
+<p><strong>Reason:</strong> <%= @reason %></p>
+<% end %>
+
+<p>This was originally scheduled for: <strong><%= @interview.scheduled_at_formatted %></strong></p>
+
+<p>Please remove this from your calendar.</p>
+
+<p>Best regards,<br>
+<%= @interview.organization.name %> Recruiting</p>

@@ -1,0 +1,17 @@
+<%
+  badge_class = case status.to_s
+  when "draft"
+    "bg-secondary"
+  when "pending_approval"
+    "bg-warning text-dark"
+  when "open"
+    "bg-success"
+  when "on_hold"
+    "bg-info"
+  when "closed"
+    "bg-dark"
+  else
+    "bg-secondary"
+  end
+%>
+<span class="badge <%= badge_class %>"><%= status.to_s.humanize %></span>

@@ -1,0 +1,59 @@
+<% content_for :title, "Initiate I-9 Verification" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Initiate I-9 Verification</h1>
+    <p class="text-muted mb-0">Start I-9 process for a new hire</p>
+  </div>
+  <%= link_to "Back", admin_i9_verifications_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<%= form_with model: @i9_verification, url: admin_i9_verifications_path, method: :post, local: true do |f| %>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Select Application</h5>
+        </div>
+        <div class="card-body">
+          <% if @applications.any? %>
+            <div class="mb-3">
+              <%= f.label :application_id, "Application", class: "form-label" %>
+              <%= f.select :application_id, @applications.map { |a| ["#{a.candidate.full_name} - #{a.job.title}", a.id] }, { prompt: "Select an application..." }, class: "form-select" %>
+            </div>
+            <div class="mb-3">
+              <%= f.label :employee_start_date, "Expected Start Date", class: "form-label" %>
+              <%= f.date_field :employee_start_date, class: "form-control" %>
+              <div class="form-text">Section 2 deadline will be calculated as 3 business days after this date.</div>
+            </div>
+          <% else %>
+            <div class="alert alert-info mb-0">
+              No applications are eligible for I-9 verification. Applications must be in "offered" or "hired" status and not already have an I-9.
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">I-9 Requirements</h5>
+        </div>
+        <div class="card-body">
+          <ul class="mb-0">
+            <li>Section 1 must be completed by the employee on or before their first day</li>
+            <li>Section 2 must be completed by the employer within 3 business days of start</li>
+          </ul>
+        </div>
+        <% if @applications.any? %>
+          <div class="card-footer">
+            <div class="d-grid">
+              <%= f.submit "Initiate I-9", class: "btn btn-primary" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

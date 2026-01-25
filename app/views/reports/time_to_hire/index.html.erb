@@ -1,0 +1,237 @@
+<% content_for :title, "Time to Hire Report" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Time to Hire Report</h1>
+    <p class="text-muted mb-0">Average days from application to hire</p>
+  </div>
+  <%= render "reports/shared/export_buttons", csv_path: export_reports_time_to_hire_index_path(request.query_parameters) %>
+</div>
+
+<%= render "reports/shared/date_range_filter", jobs: @jobs, departments: @departments, show_filters: true %>
+
+<!-- Summary Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-4 fw-bold text-primary"><%= @data[:overall][:total_hires] %></div>
+        <div class="text-muted">Total Hires</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-4 fw-bold text-success"><%= @data[:overall][:average_days] %></div>
+        <div class="text-muted">Avg Days to Hire</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-4 fw-bold text-info"><%= @data[:overall][:median_days].round(0) %></div>
+        <div class="text-muted">Median Days</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-4 fw-bold text-warning">
+          <%= @data[:overall][:min_days] %> - <%= @data[:overall][:max_days] %>
+        </div>
+        <div class="text-muted">Range (Min - Max)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Trend Chart -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Time to Hire Trend</h5>
+  </div>
+  <div class="card-body">
+    <% if @data[:trend].any? %>
+      <div data-controller="chart"
+           data-chart-type-value="line"
+           data-chart-data-value="<%= {
+             labels: @data[:trend].map { |t| t[:label] },
+             datasets: [{
+               label: 'Average Days to Hire',
+               data: @data[:trend].map { |t| t[:average_days] },
+               borderColor: '#3B82F6',
+               backgroundColor: 'rgba(59, 130, 246, 0.1)',
+               fill: true
+             }]
+           }.to_json %>">
+        <canvas data-chart-target="canvas" height="100"></canvas>
+      </div>
+    <% else %>
+      <div class="text-center text-muted py-5">
+        <i class="bi bi-graph-up fs-1 d-block mb-3"></i>
+        <p>No data available for the selected date range</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Breakdown Tables -->
+<div class="row g-4">
+  <!-- By Job -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="card-title mb-0">By Job</h5>
+      </div>
+      <div class="card-body p-0">
+        <% if @data[:by_job].any? %>
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Job</th>
+                  <th class="text-end">Hires</th>
+                  <th class="text-end">Avg Days</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @data[:by_job].first(10).each do |job| %>
+                  <tr>
+                    <td><%= job[:job_title] %></td>
+                    <td class="text-end"><%= job[:hires] %></td>
+                    <td class="text-end">
+                      <span class="badge bg-<%= job[:average_days] <= 30 ? 'success' : job[:average_days] <= 60 ? 'warning' : 'danger' %>">
+                        <%= job[:average_days] %> days
+                      </span>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-4">No data available</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- By Department -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="card-title mb-0">By Department</h5>
+      </div>
+      <div class="card-body p-0">
+        <% if @data[:by_department].any? %>
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Department</th>
+                  <th class="text-end">Hires</th>
+                  <th class="text-end">Avg Days</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @data[:by_department].each do |dept| %>
+                  <tr>
+                    <td><%= dept[:department_name] %></td>
+                    <td class="text-end"><%= dept[:hires] %></td>
+                    <td class="text-end">
+                      <span class="badge bg-<%= dept[:average_days] <= 30 ? 'success' : dept[:average_days] <= 60 ? 'warning' : 'danger' %>">
+                        <%= dept[:average_days] %> days
+                      </span>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-4">No data available</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- By Source -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="card-title mb-0">By Source</h5>
+      </div>
+      <div class="card-body p-0">
+        <% if @data[:by_source].any? %>
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Source</th>
+                  <th class="text-end">Hires</th>
+                  <th class="text-end">Avg Days</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @data[:by_source].each do |source| %>
+                  <tr>
+                    <td><%= source[:source_label] %></td>
+                    <td class="text-end"><%= source[:hires] %></td>
+                    <td class="text-end">
+                      <span class="badge bg-<%= source[:average_days] <= 30 ? 'success' : source[:average_days] <= 60 ? 'warning' : 'danger' %>">
+                        <%= source[:average_days] %> days
+                      </span>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-4">No data available</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Hires -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Recent Hires</h5>
+      </div>
+      <div class="card-body p-0">
+        <% if @data[:raw_data].any? %>
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Candidate</th>
+                  <th>Job</th>
+                  <th class="text-end">Days</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @data[:raw_data].first(10).each do |row| %>
+                  <tr>
+                    <td><%= row[:candidate_name] %></td>
+                    <td><%= row[:job_title] %></td>
+                    <td class="text-end"><%= row[:days_to_hire] %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-4">No data available</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

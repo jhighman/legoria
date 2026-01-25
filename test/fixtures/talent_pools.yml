@@ -1,0 +1,41 @@
+# Phase 5: Talent pool fixtures
+
+engineering_pool:
+  organization: acme
+  owner: recruiter
+  name: Engineering Candidates
+  description: Promising engineering candidates for future roles
+  pool_type: manual
+  shared: true
+  active: true
+  color: "#3B82F6"
+  candidates_count: 2
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.week.ago %>
+
+ruby_talent:
+  organization: acme
+  owner: admin
+  saved_search: ruby_developers
+  name: Ruby Talent Pool
+  description: Auto-populated from Ruby developers search
+  pool_type: smart
+  shared: true
+  active: true
+  color: "#EF4444"
+  candidates_count: 0
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= 2.weeks.ago %>
+
+inactive_pool:
+  organization: acme
+  owner: recruiter
+  name: Old Marketing Pool
+  description: Historical marketing candidates
+  pool_type: manual
+  shared: false
+  active: false
+  color: "#9CA3AF"
+  candidates_count: 0
+  created_at: <%= 3.months.ago %>
+  updated_at: <%= 1.month.ago %>

@@ -1,0 +1,72 @@
+<h1 style="color: <%= @days_until_expiration <= 30 ? '#dc3545' : '#ffc107' %>;">
+  <% if @days_until_expiration <= 7 %>
+    URGENT: Work Authorization Expiring Soon
+  <% elsif @days_until_expiration <= 30 %>
+    Action Required: Work Authorization Expiring
+  <% else %>
+    Work Authorization Expiration Notice
+  <% end %>
+</h1>
+
+<p>Hello,</p>
+
+<p>
+  This is a notification that the work authorization for <strong><%= @candidate.full_name %></strong>
+  is expiring soon.
+</p>
+
+<h2>Authorization Details</h2>
+
+<table style="width: 100%; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Employee:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @candidate.full_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Authorization Type:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @work_authorization.authorization_type_label %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Expiration Date:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee; color: #dc3545; font-weight: bold;"><%= @expiration_date&.strftime("%B %d, %Y") %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Days Remaining:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @days_until_expiration %> days</td>
+  </tr>
+</table>
+
+<% if @applications.any? %>
+  <h2>Active Positions</h2>
+
+  <ul>
+    <% @applications.each do |app| %>
+      <li><%= app.job.title %> - <%= app.status.titleize %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<h2>Required Actions</h2>
+
+<p>
+  To continue employment, the employee must provide updated work authorization
+  documentation before the expiration date. This requires completing Section 3
+  (Reverification) of Form I-9.
+</p>
+
+<% if @days_until_expiration <= 30 %>
+  <p style="margin-top: 20px; padding: 15px; background-color: #f8d7da; border-left: 4px solid #dc3545;">
+    <strong>Urgent:</strong> Work authorization expires in <%= @days_until_expiration %> days.
+    Please contact the employee immediately to begin the reverification process.
+  </p>
+<% else %>
+  <p style="margin-top: 20px; padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107;">
+    <strong>Note:</strong> Please begin the reverification process well in advance
+    of the expiration date to ensure continuous work authorization.
+  </p>
+<% end %>
+
+<p>
+  Best regards,<br>
+  <%= PlatformBrand.name %> System
+</p>

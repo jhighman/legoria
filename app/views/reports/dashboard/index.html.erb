@@ -1,0 +1,233 @@
+<% content_for :title, "Analytics Overview" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Analytics Overview</h1>
+    <p class="text-muted mb-0">Last 30 days summary</p>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card h-100 border-primary">
+      <div class="card-body text-center">
+        <i class="bi bi-clock text-primary fs-1 mb-2 d-block"></i>
+        <div class="h2 mb-0"><%= @time_to_hire[:overall][:average_days] %></div>
+        <div class="text-muted">Avg Days to Hire</div>
+        <%= link_to "View Details", reports_time_to_hire_index_path, class: "stretched-link" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card h-100 border-success">
+      <div class="card-body text-center">
+        <i class="bi bi-people-fill text-success fs-1 mb-2 d-block"></i>
+        <div class="h2 mb-0"><%= @time_to_hire[:overall][:total_hires] %></div>
+        <div class="text-muted">Total Hires</div>
+        <%= link_to "View Details", reports_time_to_hire_index_path, class: "stretched-link" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card h-100 border-info">
+      <div class="card-body text-center">
+        <i class="bi bi-funnel text-info fs-1 mb-2 d-block"></i>
+        <% overall_conversion = @pipeline[:funnel].any? ? @pipeline[:funnel].last[:conversion_from_previous] : 0 %>
+        <div class="h2 mb-0"><%= overall_conversion %>%</div>
+        <div class="text-muted">Pipeline Conversion</div>
+        <%= link_to "View Details", reports_pipeline_index_path, class: "stretched-link" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card h-100 border-warning">
+      <div class="card-body text-center">
+        <i class="bi bi-diagram-3 text-warning fs-1 mb-2 d-block"></i>
+        <div class="h2 mb-0"><%= @source_effectiveness[:summary][:unique_sources] %></div>
+        <div class="text-muted">Active Sources</div>
+        <%= link_to "View Details", reports_sources_path, class: "stretched-link" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Report Cards -->
+<div class="row g-4">
+  <!-- Time to Hire -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">
+          <i class="bi bi-clock me-2"></i>Time to Hire
+        </h5>
+        <%= link_to "Full Report", reports_time_to_hire_index_path, class: "btn btn-sm btn-outline-primary" %>
+      </div>
+      <div class="card-body">
+        <% if @time_to_hire[:trend].any? %>
+          <div data-controller="chart"
+               data-chart-type-value="line"
+               data-chart-data-value="<%= {
+                 labels: @time_to_hire[:trend].last(8).map { |t| t[:label] },
+                 datasets: [{
+                   label: 'Days to Hire',
+                   data: @time_to_hire[:trend].last(8).map { |t| t[:average_days] },
+                   borderColor: '#3B82F6',
+                   backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                   fill: true
+                 }]
+               }.to_json %>">
+            <canvas data-chart-target="canvas" height="100"></canvas>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-4">No data available</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Source Effectiveness -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">
+          <i class="bi bi-diagram-3 me-2"></i>Top Sources
+        </h5>
+        <%= link_to "Full Report", reports_sources_path, class: "btn btn-sm btn-outline-primary" %>
+      </div>
+      <div class="card-body">
+        <% if @source_effectiveness[:by_source].any? %>
+          <div data-controller="chart"
+               data-chart-type-value="bar"
+               data-chart-data-value="<%= {
+                 labels: @source_effectiveness[:by_source].first(5).map { |s| s[:source_label] },
+                 datasets: [{
+                   label: 'Applications',
+                   data: @source_effectiveness[:by_source].first(5).map { |s| s[:applications] },
+                   backgroundColor: '#3B82F6'
+                 }, {
+                   label: 'Hires',
+                   data: @source_effectiveness[:by_source].first(5).map { |s| s[:hired] },
+                   backgroundColor: '#10B981'
+                 }]
+               }.to_json %>">
+            <canvas data-chart-target="canvas" height="100"></canvas>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-4">No data available</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pipeline Funnel -->
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">
+          <i class="bi bi-funnel me-2"></i>Pipeline Funnel
+        </h5>
+        <%= link_to "Full Report", reports_pipeline_index_path, class: "btn btn-sm btn-outline-primary" %>
+      </div>
+      <div class="card-body">
+        <% if @pipeline[:funnel].any? %>
+          <div class="row text-center">
+            <% max_entries = @pipeline[:funnel].map { |s| s[:entries] }.max %>
+            <% @pipeline[:funnel].each_with_index do |stage, index| %>
+              <div class="col">
+                <div class="mx-auto mb-2 rounded" style="width: 80%; background: <%= stage[:stage_color] || '#6B7280' %>; height: <%= max_entries.positive? ? [(stage[:entries].to_f / max_entries * 100), 10].max : 10 %>px;">
+                </div>
+                <div class="fw-bold"><%= stage[:entries] %></div>
+                <small class="text-muted"><%= stage[:stage_name] %></small>
+                <% if index > 0 %>
+                  <div class="mt-1">
+                    <small class="badge bg-<%= stage[:conversion_from_previous] >= 50 ? 'success' : stage[:conversion_from_previous] >= 25 ? 'warning' : 'danger' %>">
+                      <%= stage[:conversion_from_previous] %>%
+                    </small>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-4">No pipeline data available</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Report Navigation -->
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Available Reports</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-4">
+      <div class="col-md-3">
+        <%= link_to reports_time_to_hire_index_path, class: "text-decoration-none" do %>
+          <div class="p-3 bg-light rounded text-center h-100">
+            <i class="bi bi-clock fs-3 text-primary d-block mb-2"></i>
+            <strong>Time to Hire</strong>
+            <p class="text-muted small mb-0">Average hiring duration by job, department, and source</p>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="col-md-3">
+        <%= link_to reports_sources_path, class: "text-decoration-none" do %>
+          <div class="p-3 bg-light rounded text-center h-100">
+            <i class="bi bi-diagram-3 fs-3 text-success d-block mb-2"></i>
+            <strong>Source Effectiveness</strong>
+            <p class="text-muted small mb-0">Application sources and conversion rates</p>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="col-md-3">
+        <%= link_to reports_pipeline_index_path, class: "text-decoration-none" do %>
+          <div class="p-3 bg-light rounded text-center h-100">
+            <i class="bi bi-funnel fs-3 text-info d-block mb-2"></i>
+            <strong>Pipeline Conversion</strong>
+            <p class="text-muted small mb-0">Stage-to-stage conversion analysis</p>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="col-md-3">
+        <%= link_to reports_operational_index_path, class: "text-decoration-none" do %>
+          <div class="p-3 bg-light rounded text-center h-100">
+            <i class="bi bi-speedometer fs-3 text-warning d-block mb-2"></i>
+            <strong>Operational</strong>
+            <p class="text-muted small mb-0">Recruiter productivity and requisition health</p>
+          </div>
+        <% end %>
+      </div>
+
+      <% if policy(:report).eeoc? %>
+        <div class="col-md-3">
+          <%= link_to reports_eeoc_index_path, class: "text-decoration-none" do %>
+            <div class="p-3 bg-light rounded text-center h-100">
+              <i class="bi bi-file-earmark-text fs-3 text-secondary d-block mb-2"></i>
+              <strong>EEOC Report</strong>
+              <p class="text-muted small mb-0">Equal employment opportunity compliance</p>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="col-md-3">
+          <%= link_to reports_diversity_index_path, class: "text-decoration-none" do %>
+            <div class="p-3 bg-light rounded text-center h-100">
+              <i class="bi bi-pie-chart fs-3 text-purple d-block mb-2"></i>
+              <strong>Diversity Metrics</strong>
+              <p class="text-muted small mb-0">Workforce diversity analysis</p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

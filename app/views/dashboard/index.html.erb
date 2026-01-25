@@ -1,0 +1,326 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Dashboard</h1>
+    <p class="text-muted mb-0">Welcome back, <%= current_user.first_name %>!</p>
+  </div>
+  <div>
+    <%= link_to new_job_path, class: "btn btn-primary" do %>
+      <i class="bi bi-plus me-1"></i> New Job
+    <% end %>
+  </div>
+</div>
+
+<!-- SLA Alerts -->
+<% if @sla_alerts.any? %>
+  <div class="row mb-4">
+    <% @sla_alerts.each do |alert| %>
+      <div class="col-md-<%= 12 / @sla_alerts.length %>">
+        <div class="alert alert-<%= alert[:color] %> d-flex align-items-center mb-0">
+          <i class="bi bi-<%= alert[:icon] %> me-2"></i>
+          <span><%= alert[:message] %></span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<!-- Key Metrics -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+            <i class="bi bi-briefcase text-success"></i>
+          </div>
+          <div>
+            <p class="text-muted mb-0 small">Open Jobs</p>
+            <h4 class="mb-0"><%= @open_jobs_count %></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-lg-3">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+            <i class="bi bi-people text-primary"></i>
+          </div>
+          <div>
+            <p class="text-muted mb-0 small">Active Candidates</p>
+            <h4 class="mb-0"><%= @active_applications_count %></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-lg-3">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+            <i class="bi bi-inbox text-info"></i>
+          </div>
+          <div>
+            <p class="text-muted mb-0 small">New This Week</p>
+            <h4 class="mb-0"><%= @new_applications_this_week %></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-6 col-lg-3">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
+            <i class="bi bi-hourglass-split text-warning"></i>
+          </div>
+          <div>
+            <p class="text-muted mb-0 small">Pending Approval</p>
+            <h4 class="mb-0"><%= @pending_approval_count %></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Left Column: Task Queue -->
+  <div class="col-lg-8">
+    <!-- Pending Approvals -->
+    <% if @pending_approvals.any? %>
+      <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h6 class="mb-0"><i class="bi bi-clock me-2 text-warning"></i>Pending Approvals</h6>
+          <%= link_to "View all", pending_approval_jobs_path, class: "btn btn-sm btn-outline-secondary" %>
+        </div>
+        <ul class="list-group list-group-flush">
+          <% @pending_approvals.each do |job| %>
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong><%= link_to job.title, job_path(job), class: "text-decoration-none" %></strong>
+                  <small class="text-muted d-block">
+                    Submitted <%= time_ago_in_words(job.updated_at) %> ago
+                    <% if job.hiring_manager %>
+                      &middot; For <%= job.hiring_manager.display_name %>
+                    <% end %>
+                  </small>
+                </div>
+                <% if current_user.admin? || current_user.id == job.hiring_manager_id %>
+                  <div class="btn-group btn-group-sm">
+                    <%= button_to approve_job_path(job), method: :post, class: "btn btn-outline-success", data: { turbo_confirm: "Approve this job?" } do %>
+                      <i class="bi bi-check"></i>
+                    <% end %>
+                    <%= button_to reject_job_path(job), method: :post, class: "btn btn-outline-danger", data: { turbo_confirm: "Reject this job?" } do %>
+                      <i class="bi bi-x"></i>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Stuck Applications (SLA Warning) -->
+    <% if @stuck_applications.any? %>
+      <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2 text-danger"></i>Needs Attention</h6>
+          <span class="badge bg-danger"><%= @stuck_applications.size %></span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 table-sm">
+            <thead class="table-light">
+              <tr>
+                <th>Candidate</th>
+                <th>Job</th>
+                <th>Stage</th>
+                <th>Days Stuck</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @stuck_applications.each do |app| %>
+                <tr>
+                  <td>
+                    <%= link_to app.candidate.full_name, candidate_path(app.candidate), class: "text-decoration-none" %>
+                  </td>
+                  <td class="text-muted small"><%= app.job.title %></td>
+                  <td>
+                    <span class="badge bg-secondary"><%= app.current_stage.name %></span>
+                  </td>
+                  <td>
+                    <% days = ((Time.current - app.last_activity_at) / 1.day).to_i %>
+                    <span class="badge <%= days > 14 ? 'bg-danger' : 'bg-warning text-dark' %>">
+                      <%= days %> days
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <%= link_to job_pipeline_path(app.job), class: "btn btn-sm btn-outline-primary" do %>
+                      <i class="bi bi-arrow-right"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Pipeline Summary -->
+    <div class="card mb-4 border-0 shadow-sm">
+      <div class="card-header bg-white">
+        <h6 class="mb-0"><i class="bi bi-funnel me-2 text-primary"></i>Pipeline Summary</h6>
+      </div>
+      <div class="card-body">
+        <% if @pipeline_by_stage.any? %>
+          <div class="row g-2">
+            <% @pipeline_by_stage.each do |stage_name, count| %>
+              <div class="col-6 col-md-4 col-lg-3">
+                <div class="border rounded p-2 text-center">
+                  <div class="fw-bold text-primary"><%= count %></div>
+                  <small class="text-muted"><%= stage_name %></small>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted text-center mb-0">No active applications in pipeline</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Starred Candidates -->
+    <% if @starred_applications.any? %>
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <h6 class="mb-0"><i class="bi bi-star-fill me-2 text-warning"></i>Starred Candidates</h6>
+        </div>
+        <ul class="list-group list-group-flush">
+          <% @starred_applications.each do |app| %>
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                    <small><%= app.candidate.initials %></small>
+                  </div>
+                  <div>
+                    <strong><%= link_to app.candidate.full_name, candidate_path(app.candidate), class: "text-decoration-none" %></strong>
+                    <small class="text-muted d-block"><%= app.job.title %></small>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <span class="badge bg-light text-dark border"><%= app.current_stage.name %></span>
+                  <% if app.rating %>
+                    <span class="ms-1">
+                      <% app.rating.times do %><i class="bi bi-star-fill text-warning" style="font-size: 0.7rem;"></i><% end %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Right Column: Activity & Stats -->
+  <div class="col-lg-4">
+    <!-- Recent Activity -->
+    <div class="card mb-4 border-0 shadow-sm">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="bi bi-activity me-2 text-info"></i>Recent Activity</h6>
+        <small class="text-muted">Last 24 hours</small>
+      </div>
+      <ul class="list-group list-group-flush">
+        <% if @recent_activity.any? %>
+          <% @recent_activity.each do |log| %>
+            <li class="list-group-item py-2">
+              <div class="d-flex align-items-start">
+                <div class="me-2 mt-1">
+                  <i class="bi bi-<%= activity_icon(log.action) %> text-muted"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <small class="d-block">
+                    <strong><%= log.user&.first_name || 'System' %></strong>
+                    <%= log.action_label.downcase %>
+                    <span class="text-muted"><%= log.auditable_type.downcase %></span>
+                  </small>
+                  <small class="text-muted"><%= time_ago_in_words(log.created_at) %> ago</small>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        <% else %>
+          <li class="list-group-item text-center text-muted py-4">
+            <i class="bi bi-inbox fs-4 d-block mb-2"></i>
+            No activity in the last 24 hours
+          </li>
+        <% end %>
+      </ul>
+      <% if current_user.admin? %>
+        <div class="card-footer bg-white text-center">
+          <%= link_to "View all activity", admin_audit_logs_path, class: "text-decoration-none small" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Recent Hires -->
+    <% if @recent_hires.any? %>
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <h6 class="mb-0"><i class="bi bi-trophy me-2 text-success"></i>Recent Hires</h6>
+        </div>
+        <ul class="list-group list-group-flush">
+          <% @recent_hires.each do |app| %>
+            <li class="list-group-item py-2">
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px;">
+                  <i class="bi bi-check" style="font-size: 0.8rem;"></i>
+                </div>
+                <div>
+                  <small class="d-block fw-medium"><%= app.candidate.full_name %></small>
+                  <small class="text-muted"><%= app.job.title %></small>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Quick Links -->
+    <div class="card mt-4 border-0 shadow-sm">
+      <div class="card-header bg-white">
+        <h6 class="mb-0"><i class="bi bi-lightning me-2"></i>Quick Links</h6>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          <%= link_to jobs_path, class: "btn btn-outline-secondary btn-sm text-start" do %>
+            <i class="bi bi-briefcase me-2"></i> All Jobs
+          <% end %>
+          <%= link_to candidates_path, class: "btn btn-outline-secondary btn-sm text-start" do %>
+            <i class="bi bi-people me-2"></i> All Candidates
+          <% end %>
+          <% if current_user.admin? %>
+            <%= link_to admin_users_path, class: "btn btn-outline-secondary btn-sm text-start" do %>
+              <i class="bi bi-person-gear me-2"></i> Manage Users
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

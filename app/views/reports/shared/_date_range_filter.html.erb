@@ -1,0 +1,56 @@
+<div class="card mb-4" data-controller="date-range">
+  <%= form_with url: url_for, method: :get, class: "card-body" do |f| %>
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label">Date Range</label>
+        <%= select_tag :range,
+              options_for_select(preset_range_options, date_range_preset),
+              class: "form-select",
+              data: { date_range_target: "select", action: "change->date-range#toggle change->date-range#submitOnChange" } %>
+      </div>
+
+      <div class="col-md-5 <%= 'd-none' unless date_range_preset == 'custom' %>" data-date-range-target="customFields">
+        <div class="row g-2">
+          <div class="col-6">
+            <label class="form-label">Start Date</label>
+            <%= date_field_tag :start_date, start_date.to_date,
+                  class: "form-control",
+                  data: { date_range_target: "startDate" } %>
+          </div>
+          <div class="col-6">
+            <label class="form-label">End Date</label>
+            <%= date_field_tag :end_date, end_date.to_date,
+                  class: "form-control",
+                  data: { date_range_target: "endDate" } %>
+          </div>
+        </div>
+      </div>
+
+      <% if local_assigns[:show_filters] %>
+        <% if local_assigns[:jobs] %>
+          <div class="col-md-2">
+            <label class="form-label">Job</label>
+            <%= select_tag :job_id,
+                  options_from_collection_for_select(jobs, :id, :title, params[:job_id]),
+                  include_blank: "All Jobs",
+                  class: "form-select" %>
+          </div>
+        <% end %>
+
+        <% if local_assigns[:departments] %>
+          <div class="col-md-2">
+            <label class="form-label">Department</label>
+            <%= select_tag :department_id,
+                  options_from_collection_for_select(departments, :id, :name, params[:department_id]),
+                  include_blank: "All Departments",
+                  class: "form-select" %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <div class="col-auto">
+        <%= submit_tag "Apply", class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

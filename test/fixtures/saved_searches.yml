@@ -1,0 +1,53 @@
+# Phase 5: Saved search fixtures
+
+ruby_developers:
+  organization: acme
+  user: recruiter
+  name: Ruby Developers
+  description: Search for Ruby developers with Rails experience
+  criteria:
+    skills:
+      - ruby
+      - rails
+    min_experience: 3
+  search_type: candidate
+  shared: true
+  alert_enabled: true
+  alert_frequency: daily
+  run_count: 25
+  last_result_count: 15
+  last_run_at: <%= 1.day.ago %>
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.day.ago %>
+
+senior_engineers:
+  organization: acme
+  user: admin
+  name: Senior Engineers
+  description: Experienced engineers with bachelor's degree
+  criteria:
+    min_experience: 7
+    education_level: bachelor
+  search_type: candidate
+  shared: true
+  alert_enabled: false
+  run_count: 10
+  last_result_count: 8
+  last_run_at: <%= 1.week.ago %>
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= 1.week.ago %>
+
+my_private_search:
+  organization: acme
+  user: recruiter
+  name: My Private Search
+  description: Personal search for project managers
+  criteria:
+    query: "project manager"
+    location: "New York"
+  search_type: candidate
+  shared: false
+  alert_enabled: false
+  run_count: 3
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 3.days.ago %>

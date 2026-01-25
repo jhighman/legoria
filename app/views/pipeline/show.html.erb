@@ -1,0 +1,70 @@
+<div id="flash-messages"></div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1"><%= @job.title %> Pipeline</h1>
+    <p class="text-muted mb-0">
+      <%= @applications.count %> candidate<%= @applications.count == 1 ? "" : "s" %>
+      <% if @job.open? %>
+        <span class="badge bg-success ms-2">Open</span>
+      <% else %>
+        <span class="badge bg-secondary ms-2"><%= @job.status.humanize %></span>
+      <% end %>
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <div class="btn-group" role="group">
+      <%= link_to job_pipeline_path(@job), class: "btn btn-primary" do %>
+        <i class="bi bi-kanban me-1"></i> Kanban
+      <% end %>
+      <%= link_to list_job_pipeline_path(@job), class: "btn btn-outline-primary" do %>
+        <i class="bi bi-list-ul me-1"></i> List
+      <% end %>
+    </div>
+    <%= link_to new_job_application_path(@job), class: "btn btn-success" do %>
+      <i class="bi bi-plus me-1"></i> Add Candidate
+    <% end %>
+  </div>
+</div>
+
+<!-- Filters -->
+<%= render "pipeline/filters" %>
+
+<!-- Kanban Board -->
+<div id="pipeline-board" class="d-flex gap-3 overflow-auto pb-3" style="min-height: 600px;" data-controller="pipeline">
+  <% @stages.each do |stage| %>
+    <div class="pipeline-column flex-shrink-0" style="width: 300px;" data-stage-id="<%= stage.id %>">
+      <div class="card h-100">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center sticky-top">
+          <div class="d-flex align-items-center">
+            <% if stage.color.present? %>
+              <span class="rounded-circle me-2" style="width: 12px; height: 12px; background-color: <%= stage.color %>;"></span>
+            <% end %>
+            <h6 class="mb-0"><%= stage.name %></h6>
+          </div>
+          <span class="badge bg-secondary" id="stage-count-<%= stage.id %>">
+            <%= (@applications_by_stage[stage.id] || []).count %>
+          </span>
+        </div>
+        <div class="card-body p-2 overflow-auto"
+             style="max-height: 500px;"
+             data-pipeline-target="column"
+             data-stage-id="<%= stage.id %>"
+             data-action="dragover->pipeline#dragOver drop->pipeline#drop">
+          <% (@applications_by_stage[stage.id] || []).each do |application| %>
+            <%= render "pipeline/application_card", application: application, job: @job %>
+          <% end %>
+          <% if (@applications_by_stage[stage.id] || []).empty? %>
+            <div class="text-center text-muted py-4">
+              <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+              <small>No candidates</small>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Rejection Modal -->
+<%= render "pipeline/rejection_modal" %>

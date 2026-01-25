@@ -1,0 +1,81 @@
+<% content_for :title, "Work Authorizations" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Work Authorizations</h1>
+    <p class="text-muted mb-0">Track employee work authorization status</p>
+  </div>
+</div>
+
+<!-- Quick Filters -->
+<div class="btn-group mb-3" role="group">
+  <%= link_to "All", admin_work_authorizations_path, class: "btn btn-outline-secondary #{params[:expiring].blank? ? 'active' : ''}" %>
+  <%= link_to "Expiring 30 Days", admin_work_authorizations_path(expiring: "30"), class: "btn btn-outline-warning #{params[:expiring] == '30' ? 'active' : ''}" %>
+  <%= link_to "Expiring 90 Days", expiring_admin_work_authorizations_path, class: "btn btn-outline-info #{params[:action] == 'expiring' ? 'active' : ''}" %>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: admin_work_authorizations_path, method: :get, local: true, class: "row g-3" do %>
+      <div class="col-md-3">
+        <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Search candidate..." %>
+      </div>
+      <div class="col-md-2">
+        <%= select_tag :type, options_for_select([["All Types", ""]] + WorkAuthorization::AUTHORIZATION_TYPES.map { |t| [t.titleize, t] }, params[:type]), class: "form-select" %>
+      </div>
+      <div class="col-md-2">
+        <%= select_tag :indefinite, options_for_select([["All", ""], ["Indefinite", "true"], ["Temporary", "false"]], params[:indefinite]), class: "form-select" %>
+      </div>
+      <div class="col-md-2">
+        <%= submit_tag "Filter", class: "btn btn-primary" %>
+        <%= link_to "Clear", admin_work_authorizations_path, class: "btn btn-outline-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Results -->
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Employee</th>
+          <th>Authorization Type</th>
+          <th>Status</th>
+          <th>Valid Period</th>
+          <th>Days Remaining</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @work_authorizations.each do |auth| %>
+          <tr class="<%= 'table-warning' if auth.expires_within?(30) && !auth.indefinite? %> <%= 'table-danger' if auth.expired? %>">
+            <td><%= auth.candidate.full_name %></td>
+            <td><%= auth.authorization_type_label %></td>
+            <td>
+              <span class="badge bg-<%= auth.status_color %>">
+                <%= auth.status_label %>
+              </span>
+            </td>
+            <td><%= auth.validity_period %></td>
+            <td>
+              <% if auth.indefinite? %>
+                -
+              <% elsif auth.expired? %>
+                <span class="text-danger">Expired</span>
+              <% else %>
+                <%= auth.days_until_expiration %> days
+              <% end %>
+            </td>
+            <td>
+              <%= link_to "View", admin_work_authorization_path(auth), class: "btn btn-outline-primary btn-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+

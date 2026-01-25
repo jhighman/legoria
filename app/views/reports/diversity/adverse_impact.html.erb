@@ -1,0 +1,232 @@
+<% content_for :title, "Adverse Impact Analysis" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item"><%= link_to "Diversity", reports_diversity_index_path %></li>
+        <li class="breadcrumb-item active">Adverse Impact</li>
+      </ol>
+    </nav>
+    <h1 class="h3 mb-0">Adverse Impact Analysis</h1>
+  </div>
+  <%= link_to pdf_reports_diversity_index_path(request.query_parameters), class: "btn btn-outline-secondary" do %>
+    <i class="bi bi-file-earmark-pdf me-1"></i> Export PDF
+  <% end %>
+</div>
+
+<%= render "reports/shared/date_range_filter", jobs: @jobs, departments: @departments, show_filters: true %>
+
+<!-- Impact Alert -->
+<% if @data[:summary][:adverse_impact_detected] %>
+  <div class="alert alert-danger mb-4">
+    <h5 class="alert-heading">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>Potential Adverse Impact Detected
+    </h5>
+    <p class="mb-0">
+      Analysis shows selection rate disparities that may indicate adverse impact.
+      Review the details below and consult with legal counsel.
+    </p>
+  </div>
+<% else %>
+  <div class="alert alert-success mb-4">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <strong>No Adverse Impact Detected</strong> - Current selection rates are within acceptable ranges.
+  </div>
+<% end %>
+
+<!-- Summary -->
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="h2 mb-0"><%= @data[:summary][:total_applications] %></div>
+        <small class="text-muted">Applications Analyzed</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="h2 mb-0"><%= @data[:summary][:total_hires] %></div>
+        <small class="text-muted">Total Hires</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="h2 mb-0 text-<%= @data[:summary][:race_groups_with_impact].positive? ? 'danger' : 'success' %>">
+          <%= @data[:summary][:race_groups_with_impact] %>
+        </div>
+        <small class="text-muted">Race Groups Affected</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="h2 mb-0 text-<%= @data[:summary][:gender_groups_with_impact].positive? ? 'danger' : 'success' %>">
+          <%= @data[:summary][:gender_groups_with_impact] %>
+        </div>
+        <small class="text-muted">Gender Groups Affected</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Race Analysis -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Race/Ethnicity Impact Analysis</h5>
+  </div>
+  <div class="card-body p-0">
+    <% if @data[:by_race].any? %>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Group</th>
+              <th class="text-end">Applicants</th>
+              <th class="text-end">Hired</th>
+              <th class="text-end">Selection Rate</th>
+              <th class="text-end">Impact Ratio</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @data[:by_race].each do |row| %>
+              <tr class="<%= row[:has_adverse_impact] ? 'table-danger' : '' %>">
+                <td><%= row[:label] %></td>
+                <td class="text-end"><%= row[:applicants] %></td>
+                <td class="text-end"><%= row[:hired] %></td>
+                <td class="text-end"><%= row[:selection_rate] %>%</td>
+                <td class="text-end">
+                  <div class="progress" style="height: 20px; min-width: 80px;">
+                    <div class="progress-bar bg-<%= row[:status_color] %>"
+                         style="width: <%= [row[:impact_ratio] * 100, 100].min %>%;">
+                      <%= row[:impact_ratio] %>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-<%= row[:status_color] %>">
+                    <% if row[:has_adverse_impact] %>
+                      <i class="bi bi-exclamation-triangle me-1"></i>
+                    <% elsif row[:impact_ratio] >= 0.9 %>
+                      <i class="bi bi-check-circle me-1"></i>
+                    <% else %>
+                      <i class="bi bi-eye me-1"></i>
+                    <% end %>
+                    <%= row[:status] %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="text-center text-muted py-4">Insufficient data for analysis</div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Gender Analysis -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Gender Impact Analysis</h5>
+  </div>
+  <div class="card-body p-0">
+    <% if @data[:by_gender].any? %>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Group</th>
+              <th class="text-end">Applicants</th>
+              <th class="text-end">Hired</th>
+              <th class="text-end">Selection Rate</th>
+              <th class="text-end">Impact Ratio</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @data[:by_gender].each do |row| %>
+              <tr class="<%= row[:has_adverse_impact] ? 'table-danger' : '' %>">
+                <td><%= row[:label] %></td>
+                <td class="text-end"><%= row[:applicants] %></td>
+                <td class="text-end"><%= row[:hired] %></td>
+                <td class="text-end"><%= row[:selection_rate] %>%</td>
+                <td class="text-end">
+                  <div class="progress" style="height: 20px; min-width: 80px;">
+                    <div class="progress-bar bg-<%= row[:status_color] %>"
+                         style="width: <%= [row[:impact_ratio] * 100, 100].min %>%;">
+                      <%= row[:impact_ratio] %>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-<%= row[:status_color] %>"><%= row[:status] %></span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="text-center text-muted py-4">Insufficient data for analysis</div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Recommendations -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Recommendations</h5>
+  </div>
+  <div class="card-body">
+    <% @data[:recommendations].each do |rec| %>
+      <div class="d-flex mb-3 p-3 bg-light rounded">
+        <div class="me-3">
+          <% if rec[:priority] == "high" %>
+            <span class="badge bg-danger p-2"><i class="bi bi-exclamation-triangle fs-5"></i></span>
+          <% else %>
+            <span class="badge bg-info p-2"><i class="bi bi-info-circle fs-5"></i></span>
+          <% end %>
+        </div>
+        <div class="flex-grow-1">
+          <strong><%= rec[:recommendation] %></strong>
+          <% if rec[:group] %>
+            <span class="badge bg-secondary ms-2"><%= rec[:group] %></span>
+          <% end %>
+          <% if rec[:action_items].any? %>
+            <ul class="mb-0 mt-2">
+              <% rec[:action_items].each do |item| %>
+                <li class="text-muted small"><%= item %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Methodology -->
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Methodology: <%= @data[:methodology][:rule] %></h5>
+  </div>
+  <div class="card-body">
+    <p><%= @data[:methodology][:description] %></p>
+    <ul class="mb-3">
+      <li><strong>Threshold:</strong> <%= @data[:methodology][:threshold] %></li>
+      <li><strong>Anonymization:</strong> <%= @data[:methodology][:anonymization] %></li>
+    </ul>
+    <div class="alert alert-secondary mb-0">
+      <i class="bi bi-info-circle me-2"></i>
+      <small><%= @data[:methodology][:disclaimer] %></small>
+    </div>
+  </div>
+</div>

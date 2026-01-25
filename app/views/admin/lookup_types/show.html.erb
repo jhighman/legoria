@@ -1,0 +1,124 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1"><%= @lookup_type.name %></h1>
+    <p class="text-muted mb-0"><%= @lookup_type.description %></p>
+  </div>
+  <div class="d-flex gap-2">
+    <%= link_to new_admin_lookup_type_lookup_value_path(@lookup_type), class: "btn btn-primary" do %>
+      <i class="bi bi-plus me-1"></i> Add Value
+    <% end %>
+    <%= link_to edit_admin_lookup_type_path(@lookup_type), class: "btn btn-outline-secondary" do %>
+      <i class="bi bi-pencil me-1"></i> Edit
+    <% end %>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Values (<%= @lookup_values.count %>)</h5>
+    <small class="text-muted">Drag to reorder or use arrows</small>
+  </div>
+  <% if @lookup_values.any? %>
+    <ul class="list-group list-group-flush">
+      <% @lookup_values.each_with_index do |value, index| %>
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <div class="me-3 d-flex flex-column">
+                <% if index > 0 %>
+                  <%= button_to move_admin_lookup_type_lookup_value_path(@lookup_type, value, direction: "up"), method: :patch, class: "btn btn-sm btn-link text-muted p-0", title: "Move up" do %>
+                    <i class="bi bi-chevron-up"></i>
+                  <% end %>
+                <% else %>
+                  <span class="text-muted p-0"><i class="bi bi-chevron-up opacity-25"></i></span>
+                <% end %>
+                <% if index < @lookup_values.count - 1 %>
+                  <%= button_to move_admin_lookup_type_lookup_value_path(@lookup_type, value, direction: "down"), method: :patch, class: "btn btn-sm btn-link text-muted p-0", title: "Move down" do %>
+                    <i class="bi bi-chevron-down"></i>
+                  <% end %>
+                <% else %>
+                  <span class="text-muted p-0"><i class="bi bi-chevron-down opacity-25"></i></span>
+                <% end %>
+              </div>
+              <div>
+                <div class="d-flex align-items-center">
+                  <span class="fw-medium"><%= value.name %></span>
+                  <% if value.is_default? %>
+                    <span class="badge bg-primary ms-2">Default</span>
+                  <% end %>
+                  <% unless value.active? %>
+                    <span class="badge bg-secondary ms-2">Inactive</span>
+                  <% end %>
+                </div>
+                <div class="text-muted small">
+                  <code><%= value.code %></code>
+                  <% if value.description.present? %>
+                    <span class="ms-2"><%= value.description %></span>
+                  <% end %>
+                </div>
+                <% if value.translations.keys.length > 1 %>
+                  <div class="small mt-1">
+                    <% value.translations.each do |locale, trans| %>
+                      <span class="badge bg-light text-dark border me-1">
+                        <%= locale.upcase %>: <%= trans["name"] %>
+                      </span>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <div class="d-flex gap-1">
+              <%= button_to toggle_active_admin_lookup_type_lookup_value_path(@lookup_type, value), method: :patch, class: "btn btn-sm btn-outline-secondary", title: value.active? ? "Deactivate" : "Activate" do %>
+                <i class="bi bi-<%= value.active? ? 'toggle-on' : 'toggle-off' %>"></i>
+              <% end %>
+              <%= link_to edit_admin_lookup_type_lookup_value_path(@lookup_type, value), class: "btn btn-sm btn-outline-secondary", title: "Edit" do %>
+                <i class="bi bi-pencil"></i>
+              <% end %>
+              <%= button_to admin_lookup_type_lookup_value_path(@lookup_type, value), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Delete this value?" }, title: "Delete" do %>
+                <i class="bi bi-trash"></i>
+              <% end %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="card-body text-center py-5">
+      <i class="bi bi-list-ul fs-1 text-muted d-block mb-3"></i>
+      <p class="text-muted mb-3">No values defined for this lookup table</p>
+      <%= link_to new_admin_lookup_type_lookup_value_path(@lookup_type), class: "btn btn-primary" do %>
+        <i class="bi bi-plus me-1"></i> Add First Value
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="card">
+  <div class="card-header bg-white">
+    <h5 class="mb-0">Details</h5>
+  </div>
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-3 text-muted">Code</dt>
+      <dd class="col-sm-9"><code><%= @lookup_type.code %></code></dd>
+
+      <dt class="col-sm-3 text-muted">System Managed</dt>
+      <dd class="col-sm-9"><%= @lookup_type.system_managed? ? "Yes" : "No" %></dd>
+
+      <dt class="col-sm-3 text-muted">Status</dt>
+      <dd class="col-sm-9">
+        <% if @lookup_type.active? %>
+          <span class="badge bg-success">Active</span>
+        <% else %>
+          <span class="badge bg-secondary">Inactive</span>
+        <% end %>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<div class="mt-4">
+  <%= link_to admin_lookup_types_path, class: "text-decoration-none" do %>
+    <i class="bi bi-arrow-left me-1"></i> Back to Lookup Tables
+  <% end %>
+</div>

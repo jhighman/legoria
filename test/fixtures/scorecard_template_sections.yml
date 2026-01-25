@@ -1,0 +1,42 @@
+# frozen_string_literal: true
+
+competencies_section:
+  scorecard_template: default_template
+  name: Core Competencies
+  section_type: competencies
+  description: Rate the candidate on core skills
+  position: 0
+  weight: 60
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+questions_section:
+  scorecard_template: default_template
+  name: Behavioral Questions
+  section_type: questions
+  position: 1
+  weight: 30
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+overall_section:
+  scorecard_template: default_template
+  name: Overall Assessment
+  section_type: overall
+  position: 2
+  weight: 10
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+technical_section:
+  scorecard_template: technical_template
+  name: Technical Skills
+  section_type: competencies
+  position: 0
+  weight: 100
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

@@ -1,0 +1,37 @@
+<h1>Application Update</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>
+  Thank you for your interest in the <strong><%= @job.title %></strong> position at
+  <strong><%= @organization.name %></strong> and for taking the time to apply.
+</p>
+
+<p>
+  After careful consideration, we have decided to move forward with other candidates whose
+  experience more closely aligns with the requirements for this particular role.
+</p>
+
+<p>
+  This decision was not easy, as we received many qualified applications. We want you to know
+  that we truly appreciate the time and effort you invested in your application.
+</p>
+
+<p>
+  We encourage you to apply for future opportunities at <%= @organization.name %> that match
+  your skills and experience. You can view our current openings at:
+</p>
+
+<p style="margin: 20px 0;">
+  <%= link_to "View Open Positions", careers_url, style: "background-color: #0d6efd; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;" %>
+</p>
+
+<p>
+  Thank you again for considering <%= @organization.name %>, and we wish you the best in your
+  job search and future career endeavors.
+</p>
+
+<p>
+  Best regards,<br>
+  The <%= @organization.name %> Recruiting Team
+</p>

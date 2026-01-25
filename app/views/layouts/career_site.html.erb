@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for?(:title) ? "#{yield(:title)} - #{platform_name} Careers" : "#{platform_name} Careers" %></title>
+  <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Explore career opportunities at #{platform_name}. #{platform_tagline}" %>">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <% if brand_google_fonts_url.present? %>
+    <link href="<%= brand_google_fonts_url %>" rel="stylesheet">
+  <% end %>
+
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+
+  <style>
+    :root {
+      --brand-primary: <%= brand_primary_color %>;
+      --brand-secondary: <%= brand_secondary_color %>;
+      --brand-accent: <%= brand_accent_color %>;
+      --brand-font-family: <%= brand_font_family %>;
+      --brand-heading-font-family: <%= brand_heading_font_family %>;
+    }
+
+    body {
+      font-family: var(--brand-font-family);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--brand-heading-font-family);
+    }
+
+    .career-hero {
+      background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+      color: white;
+      padding: 4rem 0;
+    }
+
+    .btn-primary {
+      background-color: var(--brand-primary);
+      border-color: var(--brand-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: color-mix(in srgb, var(--brand-primary) 85%, black);
+      border-color: color-mix(in srgb, var(--brand-primary) 85%, black);
+    }
+
+    .btn-outline-primary {
+      color: var(--brand-primary);
+      border-color: var(--brand-primary);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--brand-primary);
+      border-color: var(--brand-primary);
+    }
+
+    .text-primary {
+      color: var(--brand-primary) !important;
+    }
+
+    .border-primary {
+      border-color: var(--brand-primary) !important;
+    }
+
+    a {
+      color: var(--brand-primary);
+    }
+
+    a:hover {
+      color: color-mix(in srgb, var(--brand-primary) 75%, black);
+    }
+
+    .job-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .job-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .badge-employment {
+      background-color: #e9ecef;
+      color: #495057;
+    }
+
+    .badge-location {
+      background-color: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .footer-careers {
+      background-color: #f8f9fa;
+      border-top: 1px solid #e9ecef;
+    }
+
+    <%= current_branding&.custom_css %>
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container">
+      <%= link_to careers_path, class: "navbar-brand fw-bold d-flex align-items-center" do %>
+        <% if current_branding&.logo&.attached? %>
+          <%= image_tag url_for(current_branding.logo), height: 32, class: "me-2", alt: "#{platform_name} logo" %>
+        <% else %>
+          <i class="bi bi-building me-2" style="color: var(--brand-primary);"></i>
+        <% end %>
+        <span style="color: var(--brand-primary);"><%= platform_name %> Careers</span>
+      <% end %>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#careerNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="careerNavbar">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <%= link_to "View All Jobs", careers_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Check Application Status", application_status_path, class: "nav-link" %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show mb-0 rounded-0" role="alert">
+      <div class="container"><%= notice %></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger alert-dismissible fade show mb-0 rounded-0" role="alert">
+      <div class="container"><%= alert %></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% end %>
+
+  <!-- Main Content -->
+  <main class="flex-grow-1">
+    <%= yield %>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-careers py-4 mt-auto">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="text-muted mb-0">
+            &copy; <%= Date.current.year %> <%= platform_name %>. All rights reserved.
+          </p>
+          <% if show_powered_by? %>
+            <p class="text-muted small mb-0">
+              <%= powered_by_text %>
+            </p>
+          <% end %>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <% if current_branding&.has_social_links? %>
+            <% current_branding.social_links.each do |platform, url| %>
+              <%= link_to url, class: "text-muted me-3", target: "_blank", rel: "noopener" do %>
+                <i class="bi bi-<%= platform %>"></i>
+              <% end %>
+            <% end %>
+          <% end %>
+          <a href="#" class="text-muted text-decoration-none me-3">Privacy Policy</a>
+          <a href="#" class="text-muted text-decoration-none">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+# frozen_string_literal: true
+
+default_kit:
+  organization: acme
+  name: General Interview Kit
+  description: Standard interview kit for all positions
+  introduction_notes: Welcome the candidate, explain the interview format.
+  closing_notes: Thank the candidate, explain next steps.
+  active: true
+  is_default: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+technical_kit:
+  organization: acme
+  name: Technical Interview Kit
+  description: For technical/engineering interviews
+  interview_type: technical
+  introduction_notes: Start with a brief coding warmup.
+  closing_notes: Allow time for technical questions from candidate.
+  active: true
+  is_default: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+job_specific_kit:
+  organization: acme
+  job: open_job
+  name: Product Manager Interview Kit
+  description: Customized for PM positions
+  active: true
+  is_default: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_kit:
+  organization: acme
+  name: Old Interview Kit
+  active: false
+  is_default: false
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 30.days.ago %>

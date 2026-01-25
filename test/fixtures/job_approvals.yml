@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+pending_approval:
+  job: pending_job
+  approver: hiring_manager
+  status: pending
+  sequence: 0
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+approved_approval:
+  job: open_job
+  approver: hiring_manager
+  status: approved
+  sequence: 0
+  decided_at: <%= Time.current %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

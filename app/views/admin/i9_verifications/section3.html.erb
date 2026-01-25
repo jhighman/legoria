@@ -1,0 +1,66 @@
+<% content_for :title, "Section 3 Reverification - #{@i9_verification.candidate.full_name}" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Section 3 - Reverification</h1>
+    <p class="text-muted mb-0"><%= @i9_verification.candidate.full_name %></p>
+  </div>
+  <%= link_to "Back", admin_i9_verification_path(@i9_verification), class: "btn btn-outline-secondary" %>
+</div>
+
+<%= form_with model: @i9_verification, url: complete_section3_admin_i9_verification_path(@i9_verification), method: :post, local: true do |f| %>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Reverification Information</h5>
+        </div>
+        <div class="card-body">
+          <p class="text-muted">Complete this section when the employee's work authorization has expired and they present new documents.</p>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <%= f.label :rehire_date, "Date of Rehire (if applicable)", class: "form-label" %>
+              <%= f.date_field :rehire_date, class: "form-control" %>
+            </div>
+          </div>
+
+          <h6>New Document Information</h6>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <%= f.label :new_document_title, "Document Title", class: "form-label" %>
+              <%= f.text_field :new_document_title, class: "form-control" %>
+            </div>
+            <div class="col-md-6 mb-3">
+              <%= f.label :new_document_number, "Document Number", class: "form-label" %>
+              <%= f.text_field :new_document_number, class: "form-control" %>
+            </div>
+            <div class="col-md-6 mb-3">
+              <%= f.label :new_expiration_date, "New Expiration Date", class: "form-label" %>
+              <%= f.date_field :new_expiration_date, class: "form-control" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Current Work Authorization</h5>
+        </div>
+        <div class="card-body">
+          <% if @i9_verification.work_authorization %>
+            <p><strong>Type:</strong> <%= @i9_verification.work_authorization.authorization_type_label %></p>
+            <p><strong>Expires:</strong> <%= @i9_verification.work_authorization.valid_until&.strftime("%B %d, %Y") || "Indefinite" %></p>
+          <% end %>
+        </div>
+        <div class="card-footer">
+          <div class="d-grid">
+            <%= f.submit "Complete Reverification", class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

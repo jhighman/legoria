@@ -1,0 +1,42 @@
+# frozen_string_literal: true
+
+default_kit_q1:
+  interview_kit: default_kit
+  question_bank: behavioral_question
+  position: 0
+  time_allocation: 10
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+default_kit_q2:
+  interview_kit: default_kit
+  question_bank: cultural_question
+  position: 1
+  time_allocation: 5
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+default_kit_q3:
+  interview_kit: default_kit
+  question_bank: situational_question
+  position: 2
+  time_allocation: 10
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+technical_kit_q1:
+  interview_kit: technical_kit
+  question_bank: technical_question
+  position: 0
+  time_allocation: 30
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+custom_question:
+  interview_kit: job_specific_kit
+  question: What experience do you have with product roadmaps?
+  guidance: Look for strategic thinking and prioritization skills.
+  position: 0
+  time_allocation: 15
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

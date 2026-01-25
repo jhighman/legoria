@@ -1,0 +1,40 @@
+# frozen_string_literal: true
+
+us_passport:
+  organization: acme
+  i9_verification: verified
+  list_type: list_a
+  document_type: us_passport
+  document_title: "U.S. Passport"
+  document_number: "123456789"
+  issuing_authority: "U.S. Department of State"
+  expiration_date: <%= 5.years.from_now.to_date %>
+  verified: true
+  verified_at: <%= 29.days.ago %>
+  created_at: <%= 29.days.ago %>
+  updated_at: <%= 29.days.ago %>
+
+drivers_license:
+  organization: acme
+  i9_verification: section1_complete
+  list_type: list_b
+  document_type: drivers_license
+  document_title: "Driver's License"
+  document_number: "D1234567"
+  issuing_authority: "California DMV"
+  expiration_date: <%= 3.years.from_now.to_date %>
+  verified: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+social_security_card:
+  organization: acme
+  i9_verification: section1_complete
+  list_type: list_c
+  document_type: social_security_card
+  document_title: "Social Security Card"
+  document_number: "123-45-6789"
+  issuing_authority: "Social Security Administration"
+  verified: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

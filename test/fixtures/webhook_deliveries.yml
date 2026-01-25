@@ -1,0 +1,53 @@
+# SA-11: Webhook delivery fixtures
+
+delivered_application_event:
+  organization: acme
+  webhook: application_webhook
+  event_type: application.created
+  event_id: <%= SecureRandom.uuid %>
+  payload: '{"application_id": 1, "candidate_id": 1, "job_id": 1}'
+  status: success
+  attempt_count: 1
+  max_attempts: 5
+  response_status: 200
+  response_body: '{"status": "ok"}'
+  response_time_ms: 150
+  delivered_at: <%= 1.hour.ago %>
+
+pending_delivery:
+  organization: acme
+  webhook: application_webhook
+  event_type: application.stage_changed
+  event_id: <%= SecureRandom.uuid %>
+  payload: '{"application_id": 2, "old_stage": "screening", "new_stage": "interviewing"}'
+  status: pending
+  attempt_count: 0
+  max_attempts: 5
+
+failed_delivery:
+  organization: acme
+  webhook: application_webhook
+  event_type: application.hired
+  event_id: <%= SecureRandom.uuid %>
+  payload: '{"application_id": 3}'
+  status: failed
+  attempt_count: 5
+  max_attempts: 5
+  response_status: 500
+  error_message: "Internal server error"
+  error_type: http_error
+  response_time_ms: 30000
+
+retrying_delivery:
+  organization: acme
+  webhook: interview_webhook
+  event_type: interview.scheduled
+  event_id: <%= SecureRandom.uuid %>
+  payload: '{"interview_id": 1}'
+  status: retrying
+  attempt_count: 2
+  max_attempts: 5
+  response_status: 503
+  error_message: "Service unavailable"
+  error_type: http_error
+  next_retry_at: <%= 15.minutes.from_now %>

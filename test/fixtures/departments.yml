@@ -1,0 +1,43 @@
+# frozen_string_literal: true
+
+engineering:
+  organization: acme
+  name: Engineering
+  code: ENG
+  position: 0
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+product:
+  organization: acme
+  name: Product
+  code: PROD
+  position: 1
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+marketing:
+  organization: acme
+  name: Marketing
+  code: MKT
+  position: 2
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+frontend:
+  organization: acme
+  parent: engineering
+  name: Frontend
+  code: FE
+  position: 0
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+backend:
+  organization: acme
+  parent: engineering
+  name: Backend
+  code: BE
+  position: 1
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

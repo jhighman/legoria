@@ -1,0 +1,100 @@
+<% content_for :title, "I-9 Verifications" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">I-9 Verifications</h1>
+    <p class="text-muted mb-0">Manage employment eligibility verification</p>
+  </div>
+  <div>
+    <%= link_to "New I-9", new_admin_i9_verification_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<!-- Quick Filters -->
+<div class="btn-group mb-3" role="group">
+  <%= link_to "All", admin_i9_verifications_path, class: "btn btn-outline-secondary #{params[:action] == 'index' && params[:status].blank? ? 'active' : ''}" %>
+  <%= link_to "Pending", pending_admin_i9_verifications_path, class: "btn btn-outline-warning #{params[:action] == 'pending' ? 'active' : ''}" %>
+  <%= link_to "Overdue", overdue_admin_i9_verifications_path, class: "btn btn-outline-danger #{params[:action] == 'overdue' ? 'active' : ''}" %>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: admin_i9_verifications_path, method: :get, local: true, class: "row g-3" do %>
+      <div class="col-md-3">
+        <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Search candidate..." %>
+      </div>
+      <div class="col-md-2">
+        <%= select_tag :status, options_for_select([["All Statuses", ""]] + I9Verification::STATUSES.map { |s| [s.titleize.gsub("_", " "), s] }, params[:status]), class: "form-select" %>
+      </div>
+      <div class="col-md-2">
+        <%= select_tag :deadline, options_for_select([["All Deadlines", ""], ["Due Today", "today"], ["Due This Week", "this_week"], ["Overdue", "overdue"]], params[:deadline]), class: "form-select" %>
+      </div>
+      <div class="col-md-2">
+        <%= submit_tag "Filter", class: "btn btn-primary" %>
+        <%= link_to "Clear", admin_i9_verifications_path, class: "btn btn-outline-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Results -->
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Candidate</th>
+          <th>Job</th>
+          <th>Status</th>
+          <th>Start Date</th>
+          <th>Section 2 Deadline</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @i9_verifications.each do |i9| %>
+          <tr class="<%= 'table-danger' if i9.deadline_section2 && i9.deadline_section2 < Date.current && !i9.verified? %>">
+            <td>
+              <%= link_to i9.candidate.full_name, admin_i9_verification_path(i9) %>
+            </td>
+            <td><%= i9.application.job.title %></td>
+            <td>
+              <span class="badge bg-<%= i9_status_color(i9.status) %>">
+                <%= i9.status.titleize.gsub("_", " ") %>
+              </span>
+              <% if i9.late_completion? %>
+                <span class="badge bg-warning">Late</span>
+              <% end %>
+            </td>
+            <td><%= i9.employee_start_date&.strftime("%b %d, %Y") || "-" %></td>
+            <td>
+              <% if i9.deadline_section2 %>
+                <%= i9.deadline_section2.strftime("%b %d, %Y") %>
+                <% if i9.deadline_section2 < Date.current && !i9.verified? %>
+                  <span class="text-danger">(Overdue)</span>
+                <% elsif i9.deadline_section2 == Date.current %>
+                  <span class="text-warning">(Today)</span>
+                <% end %>
+              <% else %>
+                -
+              <% end %>
+            </td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <%= link_to "View", admin_i9_verification_path(i9), class: "btn btn-outline-primary" %>
+                <% if i9.section1_complete? || i9.pending_section2? %>
+                  <%= link_to "Section 2", section2_admin_i9_verification_path(i9), class: "btn btn-outline-success" %>
+                <% end %>
+                <% if i9.verified? %>
+                  <%= link_to "Section 3", section3_admin_i9_verification_path(i9), class: "btn btn-outline-info" %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+

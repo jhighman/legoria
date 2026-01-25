@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+initial_transition:
+  application: active_application
+  from_stage:
+  to_stage: applied
+  moved_by: recruiter
+  notes: Application received
+  created_at: <%= 5.days.ago %>
+
+screening_transition:
+  application: active_application
+  from_stage: applied
+  to_stage: screening
+  moved_by: recruiter
+  duration_hours: 24
+  notes: Passed initial review
+  created_at: <%= 4.days.ago %>

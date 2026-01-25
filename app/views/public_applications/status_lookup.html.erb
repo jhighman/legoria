@@ -1,0 +1,52 @@
+<% content_for(:title) { "Check Application Status" } %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-white text-center">
+          <h4 class="mb-0">
+            <i class="bi bi-search me-2"></i>Check Your Application Status
+          </h4>
+        </div>
+        <div class="card-body">
+          <p class="text-muted text-center mb-4">
+            Enter your tracking code to view the status of your application.
+            You can find this code in your confirmation email.
+          </p>
+
+          <%= form_with url: application_status_path, method: :get, local: true do |f| %>
+            <div class="mb-4">
+              <label class="form-label fw-medium">Tracking Code</label>
+              <div class="input-group input-group-lg">
+                <%= text_field_tag :token, params[:token], class: "form-control", placeholder: "Enter your tracking code", required: true %>
+                <button type="submit" class="btn btn-primary">
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+              <div class="form-text">
+                Example: A1b2C3d4E5f6G7h8
+              </div>
+            </div>
+          <% end %>
+
+          <hr>
+
+          <div class="text-center">
+            <p class="text-muted small mb-2">Can't find your tracking code?</p>
+            <p class="text-muted small">
+              Check your email inbox and spam folder for the confirmation email
+              sent when you submitted your application.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <%= link_to careers_path, class: "btn btn-outline-secondary" do %>
+          <i class="bi bi-arrow-left me-1"></i> Back to Jobs
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

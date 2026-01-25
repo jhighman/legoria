@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+team_note:
+  candidate: john_doe
+  user: recruiter
+  content: Great communication skills, very professional.
+  visibility: team
+  pinned: false
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+private_note:
+  candidate: john_doe
+  user: hiring_manager
+  content: This is my private note about the candidate.
+  visibility: private
+  pinned: true
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+hiring_team_note:
+  candidate: jane_smith
+  user: recruiter
+  content: Ready for interview with hiring manager.
+  visibility: hiring_team
+  pinned: false
+  created_at: <%= 3.hours.ago %>
+  updated_at: <%= 3.hours.ago %>

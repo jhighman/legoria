@@ -1,0 +1,70 @@
+# frozen_string_literal: true
+
+draft_job:
+  organization: acme
+  department: engineering
+  hiring_manager: hiring_manager
+  recruiter: recruiter
+  title: Software Engineer
+  description: Build great software
+  requirements: 3+ years experience
+  location: New York, NY
+  location_type: hybrid
+  employment_type: full_time
+  headcount: 2
+  filled_count: 0
+  status: draft
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+pending_job:
+  organization: acme
+  department: engineering
+  hiring_manager: hiring_manager
+  recruiter: recruiter
+  title: Senior Developer
+  description: Lead development projects
+  requirements: 5+ years experience
+  location_type: remote
+  employment_type: full_time
+  headcount: 1
+  filled_count: 0
+  status: pending_approval
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+open_job:
+  organization: acme
+  department: product
+  hiring_manager: hiring_manager
+  recruiter: recruiter
+  title: Product Manager
+  description: Define product strategy
+  requirements: Product experience required
+  location_type: onsite
+  employment_type: full_time
+  salary_min: 12000000
+  salary_max: 18000000
+  salary_currency: USD
+  headcount: 1
+  filled_count: 0
+  status: open
+  opened_at: <%= 1.week.ago %>
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= Time.current %>
+
+closed_job:
+  organization: acme
+  department: marketing
+  title: Marketing Manager
+  description: Lead marketing campaigns
+  location_type: hybrid
+  employment_type: full_time
+  headcount: 1
+  filled_count: 1
+  status: closed
+  close_reason: filled
+  opened_at: <%= 1.month.ago %>
+  closed_at: <%= 1.day.ago %>
+  created_at: <%= 2.months.ago %>
+  updated_at: <%= Time.current %>

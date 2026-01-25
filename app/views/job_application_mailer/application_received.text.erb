@@ -1,0 +1,33 @@
+Thank You for Applying!
+
+Dear <%= @candidate.first_name %>,
+
+Thank you for your interest in the <%= @job.title %> position at <%= @organization.name %>. We have received your application and our recruiting team will review it shortly.
+
+WHAT'S NEXT?
+
+Our team will carefully review your application and qualifications. If your background matches our requirements, we will reach out to schedule the next steps in our interview process.
+
+TRACK YOUR APPLICATION
+
+You can check the status of your application at any time:
+
+<%= @status_url %>
+
+Your tracking code: <%= @application.tracking_token %>
+
+Save this code - you can use it to check your status at any time.
+
+APPLICATION DETAILS
+
+Position: <%= @job.title %>
+<% if @job.department %>
+Department: <%= @job.department.name %>
+<% end %>
+Location: <%= @job.location.presence || @job.location_type_display %>
+Applied: <%= @application.applied_at.strftime("%B %d, %Y") %>
+
+Thank you for considering a career with <%= @organization.name %>. We appreciate your interest and will be in touch soon.
+
+Best regards,
+The <%= @organization.name %> Recruiting Team

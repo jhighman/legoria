@@ -1,0 +1,114 @@
+<% content_for :title, "Expiring Work Authorizations" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Expiring Work Authorizations</h1>
+    <p class="text-muted mb-0">Authorizations requiring attention</p>
+  </div>
+  <%= link_to "Back to Report", reports_work_authorizations_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<!-- 30-Day Alert -->
+<div class="card mb-4 border-danger">
+  <div class="card-header bg-danger text-white">
+    <h5 class="card-title mb-0">Expiring Within 30 Days (<%= @expiring_30.count %>)</h5>
+  </div>
+  <% if @expiring_30.any? %>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Employee</th>
+            <th>Authorization Type</th>
+            <th>Expires</th>
+            <th>Days Remaining</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @expiring_30.each do |auth| %>
+            <tr>
+              <td><%= auth.candidate.full_name %></td>
+              <td><%= auth.authorization_type_label %></td>
+              <td><%= auth.valid_until.strftime("%b %d, %Y") %></td>
+              <td><span class="badge bg-danger"><%= auth.days_until_expiration %> days</span></td>
+              <td><%= link_to "View", admin_work_authorization_path(auth), class: "btn btn-sm btn-outline-primary" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="card-body text-center text-muted">No authorizations expiring within 30 days</div>
+  <% end %>
+</div>
+
+<!-- 60-Day Warning -->
+<div class="card mb-4 border-warning">
+  <div class="card-header bg-warning text-dark">
+    <h5 class="card-title mb-0">Expiring 31-60 Days (<%= @expiring_60.count %>)</h5>
+  </div>
+  <% if @expiring_60.any? %>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Employee</th>
+            <th>Authorization Type</th>
+            <th>Expires</th>
+            <th>Days Remaining</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @expiring_60.each do |auth| %>
+            <tr>
+              <td><%= auth.candidate.full_name %></td>
+              <td><%= auth.authorization_type_label %></td>
+              <td><%= auth.valid_until.strftime("%b %d, %Y") %></td>
+              <td><span class="badge bg-warning"><%= auth.days_until_expiration %> days</span></td>
+              <td><%= link_to "View", admin_work_authorization_path(auth), class: "btn btn-sm btn-outline-primary" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="card-body text-center text-muted">No authorizations expiring in 31-60 days</div>
+  <% end %>
+</div>
+
+<!-- 90-Day Notice -->
+<div class="card border-info">
+  <div class="card-header bg-info text-white">
+    <h5 class="card-title mb-0">Expiring 61-90 Days (<%= @expiring_90.count %>)</h5>
+  </div>
+  <% if @expiring_90.any? %>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Employee</th>
+            <th>Authorization Type</th>
+            <th>Expires</th>
+            <th>Days Remaining</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @expiring_90.each do |auth| %>
+            <tr>
+              <td><%= auth.candidate.full_name %></td>
+              <td><%= auth.authorization_type_label %></td>
+              <td><%= auth.valid_until.strftime("%b %d, %Y") %></td>
+              <td><span class="badge bg-info"><%= auth.days_until_expiration %> days</span></td>
+              <td><%= link_to "View", admin_work_authorization_path(auth), class: "btn btn-sm btn-outline-primary" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="card-body text-center text-muted">No authorizations expiring in 61-90 days</div>
+  <% end %>
+</div>

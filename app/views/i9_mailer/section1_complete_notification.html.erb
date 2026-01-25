@@ -1,0 +1,56 @@
+<h1>I-9 Section 1 Complete</h1>
+
+<p>Hello,</p>
+
+<p>
+  <strong><%= @candidate.full_name %></strong> has completed Section 1 of their I-9 form
+  for the <strong><%= @job.title %></strong> position.
+</p>
+
+<h2>Action Required</h2>
+
+<p>
+  You must complete Section 2 of the I-9 form by <strong><%= @deadline&.strftime("%B %d, %Y") %></strong>
+  (within 3 business days of the employee's start date).
+</p>
+
+<p>
+  Section 2 requires you to:
+</p>
+
+<ul>
+  <li>Physically examine the employee's original identity and employment authorization documents</li>
+  <li>Record the document information in Section 2</li>
+  <li>Sign and date the form</li>
+</ul>
+
+<h2>Employee Details</h2>
+
+<table style="width: 100%; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Employee:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @candidate.full_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Position:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @job.title %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Start Date:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @i9_verification&.employee_start_date&.strftime("%B %d, %Y") %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Section 2 Deadline:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @deadline&.strftime("%B %d, %Y") %></td>
+  </tr>
+</table>
+
+<p style="margin-top: 20px; padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107;">
+  <strong>Important:</strong> Completing Section 2 on time is a federal requirement.
+  Late completion may result in penalties.
+</p>
+
+<p>
+  Best regards,<br>
+  <%= PlatformBrand.name %> System
+</p>

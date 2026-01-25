@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <%= form_with model: lookup_value, url: lookup_value.persisted? ? admin_lookup_type_lookup_value_path(@lookup_type, lookup_value) : admin_lookup_type_lookup_values_path(@lookup_type), method: lookup_value.persisted? ? :patch : :post do |f| %>
+
+          <div class="mb-3">
+            <%= f.label :code, class: "form-label" %>
+            <% if lookup_value.persisted? %>
+              <input type="text" class="form-control" value="<%= lookup_value.code %>" disabled readonly>
+              <div class="form-text">The code cannot be changed after creation.</div>
+            <% else %>
+              <%= f.text_field :code, class: "form-control #{'is-invalid' if lookup_value.errors[:code].any?}", placeholder: "e.g., full_time" %>
+              <div class="form-text">Use lowercase letters with underscores. This will be stored in the database.</div>
+              <% if lookup_value.errors[:code].any? %>
+                <div class="invalid-feedback"><%= lookup_value.errors[:code].first %></div>
+              <% end %>
+            <% end %>
+          </div>
+
+          <hr class="my-4">
+          <h5 class="mb-3">English Translation</h5>
+
+          <div class="mb-3">
+            <label class="form-label">Display Name (English) <span class="text-danger">*</span></label>
+            <%= f.text_field :translations_en_name,
+                value: lookup_value.translations.dig("en", "name"),
+                class: "form-control #{'is-invalid' if lookup_value.errors[:translations].any?}",
+                placeholder: "e.g., Full Time" %>
+            <% if lookup_value.errors[:translations].any? %>
+              <div class="invalid-feedback"><%= lookup_value.errors[:translations].first %></div>
+            <% end %>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description (English)</label>
+            <%= f.text_area :translations_en_description,
+                value: lookup_value.translations.dig("en", "description"),
+                class: "form-control",
+                rows: 2,
+                placeholder: "Optional description for this value" %>
+          </div>
+
+          <hr class="my-4">
+          <h5 class="mb-3">Settings</h5>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-check mb-3">
+                <%= f.check_box :is_default, class: "form-check-input" %>
+                <%= f.label :is_default, "Default Value", class: "form-check-label" %>
+                <div class="form-text">This value will be pre-selected in dropdowns.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check mb-3">
+                <%= f.check_box :active, class: "form-check-input", checked: lookup_value.active? || lookup_value.new_record? %>
+                <%= f.label :active, "Active", class: "form-check-label" %>
+                <div class="form-text">Inactive values won't appear in dropdowns.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <%= f.submit lookup_value.persisted? ? "Update Value" : "Create Value", class: "btn btn-primary" %>
+            <%= link_to "Cancel", admin_lookup_type_path(@lookup_type), class: "btn btn-outline-secondary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header bg-white">
+        <h5 class="mb-0">Tips</h5>
+      </div>
+      <div class="card-body">
+        <ul class="mb-0 small text-muted">
+          <li class="mb-2">The <strong>code</strong> is used internally and should be lowercase with underscores (e.g., <code>full_time</code>)</li>
+          <li class="mb-2">The <strong>display name</strong> is what users see in dropdowns</li>
+          <li class="mb-2">Only one value can be set as the <strong>default</strong> per lookup type</li>
+          <li>You can add translations for other languages later</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

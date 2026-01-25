@@ -1,0 +1,151 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Candidates</h1>
+    <p class="text-muted mb-0">Manage your candidate database</p>
+  </div>
+  <%= link_to new_candidate_path, class: "btn btn-primary" do %>
+    <i class="bi bi-plus me-1"></i> Add Candidate
+  <% end %>
+</div>
+
+<!-- Search and Filters -->
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: candidates_path, method: :get, data: { turbo_frame: "_top" } do |f| %>
+      <div class="row g-3">
+        <!-- Search -->
+        <div class="col-md-4">
+          <label class="form-label">Search</label>
+          <%= text_field_tag :q, params[:q], placeholder: "Search by name or location...", class: "form-control" %>
+        </div>
+
+        <!-- Source filter -->
+        <div class="col-md-2">
+          <label class="form-label">Source</label>
+          <%= select_tag :source, options_for_select([["All Sources", ""]] + Application::SOURCE_TYPES.map { |s| [s.titleize, s] }, params[:source]), class: "form-select" %>
+        </div>
+
+        <!-- Has Applications -->
+        <div class="col-md-2">
+          <label class="form-label">Applications</label>
+          <%= select_tag :has_applications, options_for_select([["All", ""], ["With Applications", "true"], ["No Applications", "false"]], params[:has_applications]), class: "form-select" %>
+        </div>
+
+        <!-- Sort -->
+        <div class="col-md-2">
+          <label class="form-label">Sort</label>
+          <%= select_tag :sort, options_for_select([["Newest First", "newest"], ["Oldest First", "oldest"], ["Name (A-Z)", "name_asc"], ["Name (Z-A)", "name_desc"]], params[:sort]), class: "form-select" %>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end gap-2">
+          <%= link_to "Clear", candidates_path, class: "btn btn-link" %>
+          <%= f.submit "Search", class: "btn btn-outline-secondary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Results count -->
+<p class="text-muted small mb-3">
+  Showing <%= (@page - 1) * @per_page + 1 %>-<%= [(@page * @per_page), @total_count].min %> of <%= @total_count %> candidates
+</p>
+
+<!-- Candidates list -->
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Candidate</th>
+          <th>Contact</th>
+          <th>Location</th>
+          <th>Applications</th>
+          <th>Added</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @candidates.each do |candidate| %>
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                  <span class="small fw-medium"><%= candidate.initials %></span>
+                </div>
+                <div class="ms-3">
+                  <%= link_to candidate.full_name, candidate_path(candidate), class: "text-decoration-none fw-medium" %>
+                  <% if candidate.linkedin_url.present? %>
+                    <a href="<%= candidate.linkedin_url %>" target="_blank" class="ms-2 text-primary">
+                      <i class="bi bi-linkedin"></i>
+                    </a>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div><%= candidate.email %></div>
+              <% if candidate.phone.present? %>
+                <div class="text-muted small"><%= candidate.masked_phone %></div>
+              <% end %>
+            </td>
+            <td><%= candidate.location || "—" %></td>
+            <td>
+              <% active_apps = candidate.applications.active %>
+              <% if active_apps.any? %>
+                <div class="d-flex flex-wrap gap-1">
+                  <% active_apps.limit(2).each do |app| %>
+                    <span class="badge bg-secondary"><%= app.job.title.truncate(20) %></span>
+                  <% end %>
+                  <% if active_apps.count > 2 %>
+                    <span class="text-muted small">+<%= active_apps.count - 2 %> more</span>
+                  <% end %>
+                </div>
+              <% else %>
+                <span class="text-muted">None</span>
+              <% end %>
+            </td>
+            <td class="text-muted small"><%= time_ago_in_words(candidate.created_at) %> ago</td>
+            <td class="text-end">
+              <%= link_to "View", candidate_path(candidate), class: "btn btn-sm btn-link" %>
+              <%= link_to "Edit", edit_candidate_path(candidate), class: "btn btn-sm btn-link text-secondary" %>
+            </td>
+          </tr>
+        <% end %>
+
+        <% if @candidates.empty? %>
+          <tr>
+            <td colspan="6" class="text-center py-5">
+              <i class="bi bi-people fs-1 text-muted d-block mb-3"></i>
+              <h5>No candidates found</h5>
+              <p class="text-muted">Try adjusting your search or filters</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Pagination -->
+<% if @total_count > @per_page %>
+  <nav class="mt-4 d-flex justify-content-center">
+    <ul class="pagination">
+      <% if @page > 1 %>
+        <li class="page-item">
+          <%= link_to "Previous", candidates_path(page: @page - 1, q: params[:q], source: params[:source], sort: params[:sort]), class: "page-link" %>
+        </li>
+      <% end %>
+
+      <li class="page-item disabled">
+        <span class="page-link">Page <%= @page %> of <%= (@total_count / @per_page.to_f).ceil %></span>
+      </li>
+
+      <% if @page * @per_page < @total_count %>
+        <li class="page-item">
+          <%= link_to "Next", candidates_path(page: @page + 1, q: params[:q], source: params[:source], sort: params[:sort]), class: "page-link" %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>

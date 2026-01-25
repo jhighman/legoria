@@ -1,0 +1,81 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Jobs</h1>
+    <p class="text-muted mb-0">Manage your job requisitions</p>
+  </div>
+  <div>
+    <%= link_to new_job_path, class: "btn btn-primary" do %>
+      <i class="bi bi-plus me-1"></i> New Job
+    <% end %>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: jobs_path, method: :get, local: true, class: "row g-3 align-items-end" do %>
+      <div class="col-md-3">
+        <label for="status" class="form-label">Status</label>
+        <%= select_tag :status,
+              options_for_select([["All Statuses", ""]] + Job.state_machine.states.map { |s| [s.name.to_s.humanize, s.name] }, params[:status]),
+              class: "form-select" %>
+      </div>
+      <div class="col-md-3">
+        <label for="department_id" class="form-label">Department</label>
+        <%= select_tag :department_id,
+              options_for_select([["All Departments", ""]] + Department.ordered.pluck(:name, :id), params[:department_id]),
+              class: "form-select" %>
+      </div>
+      <div class="col-md-3">
+        <%= submit_tag "Filter", class: "btn btn-outline-secondary" %>
+        <% if params[:status].present? || params[:department_id].present? %>
+          <%= link_to "Clear", jobs_path, class: "btn btn-link" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Jobs List -->
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <% @jobs.each do |job| %>
+      <li class="list-group-item list-group-item-action p-0">
+        <%= link_to job_path(job), class: "d-block text-decoration-none text-dark p-3" do %>
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="d-flex align-items-center mb-1">
+                <span class="fw-semibold text-primary me-2"><%= job.title %></span>
+                <%= render partial: "status_badge", locals: { status: job.status } %>
+              </div>
+              <div class="d-flex flex-wrap gap-3 text-muted small">
+                <span><i class="bi bi-building me-1"></i> <%= job.department&.name || "No Department" %></span>
+                <span><i class="bi bi-geo-alt me-1"></i> <%= job.location.presence || job.location_type.humanize %></span>
+              </div>
+            </div>
+            <div class="text-end text-muted small">
+              <div><%= job.headcount %> opening<%= job.headcount == 1 ? "" : "s" %></div>
+              <div><%= job.employment_type.humanize %></div>
+              <% if job.hiring_manager %>
+                <div class="mt-1">HM: <%= job.hiring_manager.display_name %></div>
+              <% end %>
+            </div>
+          </div>
+          <div class="text-muted small mt-2">
+            Updated <%= time_ago_in_words(job.updated_at) %> ago
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+    <% if @jobs.empty? %>
+      <li class="list-group-item text-center py-5">
+        <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
+        <h5>No jobs</h5>
+        <p class="text-muted">Get started by creating a new job.</p>
+        <%= link_to new_job_path, class: "btn btn-primary" do %>
+          <i class="bi bi-plus me-1"></i> New Job
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

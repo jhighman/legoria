@@ -1,0 +1,206 @@
+<% content_for :title, "I-9 Verification - #{@i9_verification.candidate.full_name}" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">I-9 Verification</h1>
+    <p class="text-muted mb-0"><%= @i9_verification.candidate.full_name %> - <%= @i9_verification.application.job.title %></p>
+  </div>
+  <div>
+    <%= link_to "Back to List", admin_i9_verifications_path, class: "btn btn-outline-secondary" %>
+    <% if @i9_verification.section1_complete? || @i9_verification.pending_section2? %>
+      <%= link_to "Complete Section 2", section2_admin_i9_verification_path(@i9_verification), class: "btn btn-primary" %>
+    <% elsif @i9_verification.verified? %>
+      <%= link_to "Reverification (Section 3)", section3_admin_i9_verification_path(@i9_verification), class: "btn btn-info" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <!-- Status Card -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Verification Status</h5>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <strong>Status:</strong>
+            <span class="badge bg-<%= i9_status_color(@i9_verification.status) %> ms-2">
+              <%= @i9_verification.status.titleize.gsub("_", " ") %>
+            </span>
+          </div>
+          <div class="col-md-4">
+            <strong>Start Date:</strong> <%= @i9_verification.employee_start_date&.strftime("%B %d, %Y") || "Not set" %>
+          </div>
+          <div class="col-md-4">
+            <strong>Section 2 Deadline:</strong>
+            <% if @i9_verification.deadline_section2 %>
+              <%= @i9_verification.deadline_section2.strftime("%B %d, %Y") %>
+              <% if @i9_verification.deadline_section2 < Date.current && !@i9_verification.verified? %>
+                <span class="text-danger">(Overdue)</span>
+              <% end %>
+            <% else %>
+              Not set
+            <% end %>
+          </div>
+        </div>
+
+        <% if @i9_verification.late_completion? %>
+          <div class="alert alert-warning mb-0">
+            <strong>Late Completion:</strong> <%= @i9_verification.late_completion_reason %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Section 1 Details -->
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between">
+        <h5 class="card-title mb-0">Section 1 - Employee Information</h5>
+        <% if @i9_verification.section1_completed_at %>
+          <span class="badge bg-success">Completed</span>
+        <% else %>
+          <span class="badge bg-warning">Pending</span>
+        <% end %>
+      </div>
+      <div class="card-body">
+        <% if @i9_verification.section1_completed_at %>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Completed:</strong> <%= @i9_verification.section1_completed_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+              <p><strong>Citizenship Status:</strong> <%= @i9_verification.citizenship_status&.titleize&.gsub("_", " ") %></p>
+            </div>
+            <div class="col-md-6">
+              <% if @i9_verification.alien_number.present? %>
+                <p><strong>Alien Number:</strong> <%= @i9_verification.alien_number %></p>
+              <% end %>
+              <% if @i9_verification.alien_expiration_date.present? %>
+                <p><strong>Expiration Date:</strong> <%= @i9_verification.alien_expiration_date.strftime("%B %d, %Y") %></p>
+              <% end %>
+            </div>
+          </div>
+          <p class="text-muted mb-0"><small>Signed from IP: <%= @i9_verification.section1_signature_ip %></small></p>
+        <% else %>
+          <p class="text-muted mb-0">Employee has not completed Section 1 yet.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Section 2 Details -->
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between">
+        <h5 class="card-title mb-0">Section 2 - Employer Verification</h5>
+        <% if @i9_verification.section2_completed_at %>
+          <span class="badge bg-success">Completed</span>
+        <% else %>
+          <span class="badge bg-secondary">Not Started</span>
+        <% end %>
+      </div>
+      <div class="card-body">
+        <% if @i9_verification.section2_completed_at %>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Completed:</strong> <%= @i9_verification.section2_completed_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+              <p><strong>Completed By:</strong> <%= @i9_verification.section2_completed_by&.full_name %></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Employer:</strong> <%= @i9_verification.employer_organization_name %></p>
+              <p><strong>Title:</strong> <%= @i9_verification.employer_title %></p>
+            </div>
+          </div>
+
+          <!-- Documents -->
+          <% if @documents.any? %>
+            <h6 class="mt-4">Verified Documents</h6>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>List</th>
+                    <th>Document Type</th>
+                    <th>Number</th>
+                    <th>Expiration</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @documents.each do |doc| %>
+                    <tr>
+                      <td><span class="badge bg-info"><%= doc.list_type.titleize %></span></td>
+                      <td><%= doc.document_type.titleize.gsub("_", " ") %></td>
+                      <td><%= doc.document_number %></td>
+                      <td><%= doc.expiration_date&.strftime("%b %d, %Y") || "N/A" %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-muted mb-0">Section 2 has not been completed yet.</p>
+          <% if @i9_verification.section1_completed_at %>
+            <%= link_to "Complete Section 2", section2_admin_i9_verification_path(@i9_verification), class: "btn btn-primary btn-sm mt-2" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Section 3 Details (if applicable) -->
+    <% if @i9_verification.section3_completed_at %>
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between">
+          <h5 class="card-title mb-0">Section 3 - Reverification</h5>
+          <span class="badge bg-success">Completed</span>
+        </div>
+        <div class="card-body">
+          <p><strong>Completed:</strong> <%= @i9_verification.section3_completed_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+          <p><strong>Completed By:</strong> <%= @i9_verification.section3_completed_by&.full_name %></p>
+          <% if @i9_verification.rehire_date %>
+            <p><strong>Rehire Date:</strong> <%= @i9_verification.rehire_date.strftime("%B %d, %Y") %></p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-md-4">
+    <!-- Work Authorization -->
+    <% if @work_authorization %>
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Work Authorization</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Type:</strong> <%= @work_authorization.authorization_type_label %></p>
+          <p><strong>Status:</strong>
+            <span class="badge bg-<%= @work_authorization.status_color %>">
+              <%= @work_authorization.status_label %>
+            </span>
+          </p>
+          <p><strong>Valid:</strong> <%= @work_authorization.validity_period %></p>
+          <% unless @work_authorization.indefinite? %>
+            <p><strong>Days Remaining:</strong> <%= @work_authorization.days_until_expiration %></p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Quick Actions</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        <%= link_to admin_i9_verification_path(@i9_verification, format: :pdf), class: "list-group-item list-group-item-action" do %>
+          <i class="bi bi-file-pdf me-2"></i> Download I-9 PDF
+        <% end %>
+        <%= link_to candidate_path(@i9_verification.candidate), class: "list-group-item list-group-item-action" do %>
+          <i class="bi bi-person me-2"></i> View Candidate Profile
+        <% end %>
+        <%= link_to application_path(@i9_verification.application), class: "list-group-item list-group-item-action" do %>
+          <i class="bi bi-briefcase me-2"></i> View Application
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

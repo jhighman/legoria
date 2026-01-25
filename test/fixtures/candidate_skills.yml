@@ -1,0 +1,81 @@
+# Phase 5: Candidate skill fixtures
+
+john_ruby:
+  organization: acme
+  candidate: john_doe
+  parsed_resume: john_doe_resume
+  name: Ruby
+  normalized_name: ruby
+  category: technical
+  proficiency_level: expert
+  years_experience: 8
+  source: parsed
+  verified: true
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+john_rails:
+  organization: acme
+  candidate: john_doe
+  parsed_resume: john_doe_resume
+  name: Rails
+  normalized_name: rails
+  category: technical
+  proficiency_level: expert
+  years_experience: 7
+  source: parsed
+  verified: true
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+john_postgresql:
+  organization: acme
+  candidate: john_doe
+  parsed_resume: john_doe_resume
+  name: PostgreSQL
+  normalized_name: postgresql
+  category: technical
+  proficiency_level: advanced
+  years_experience: 5
+  source: parsed
+  verified: false
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+john_javascript:
+  organization: acme
+  candidate: john_doe
+  parsed_resume: john_doe_resume
+  name: JavaScript
+  normalized_name: javascript
+  category: technical
+  proficiency_level: intermediate
+  years_experience: 4
+  source: parsed
+  verified: false
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+jane_python:
+  organization: acme
+  candidate: jane_smith
+  name: Python
+  normalized_name: python
+  category: technical
+  proficiency_level: advanced
+  years_experience: 5
+  source: self_reported
+  verified: false
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+jane_communication:
+  organization: acme
+  candidate: jane_smith
+  name: Communication
+  normalized_name: communication
+  category: soft
+  source: inferred
+  verified: false
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

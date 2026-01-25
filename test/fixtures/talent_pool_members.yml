@@ -1,0 +1,19 @@
+# Phase 5: Talent pool member fixtures
+
+john_in_engineering:
+  talent_pool: engineering_pool
+  candidate: john_doe
+  added_by: recruiter
+  source: manual
+  notes: "Strong Ruby background, good for senior roles"
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= 2.weeks.ago %>
+
+jane_in_engineering:
+  talent_pool: engineering_pool
+  candidate: jane_smith
+  added_by: admin
+  source: manual
+  notes: "Python expertise, cross-train for Ruby"
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>

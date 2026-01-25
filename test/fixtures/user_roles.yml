@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+admin_role:
+  user: admin
+  role: admin
+  granted_at: <%= Time.current %>
+  created_at: <%= Time.current %>
+
+recruiter_role:
+  user: recruiter
+  role: recruiter
+  granted_at: <%= Time.current %>
+  created_at: <%= Time.current %>
+
+hiring_manager_role:
+  user: hiring_manager
+  role: hiring_manager
+  granted_at: <%= Time.current %>
+  created_at: <%= Time.current %>

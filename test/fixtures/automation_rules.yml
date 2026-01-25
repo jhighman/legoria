@@ -1,0 +1,85 @@
+# Phase 5: Automation rule fixtures
+
+knockout_rule:
+  organization: acme
+  created_by: admin
+  job: draft_job
+  name: Work Authorization Knockout
+  description: Auto-reject candidates without work authorization
+  rule_type: knockout_question
+  trigger_event: application_created
+  conditions:
+    question_id: 1
+    operator: equals
+    value: "no"
+  actions:
+    - type: reject
+      reason_id: 1
+    - type: send_email
+      template: rejection
+  active: true
+  priority: 10
+  times_triggered: 5
+  last_triggered_at: <%= 3.days.ago %>
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 3.days.ago %>
+
+high_score_advance:
+  organization: acme
+  created_by: recruiter
+  name: High Score Auto-Advance
+  description: Auto-advance candidates with score >= 80
+  rule_type: stage_progression
+  trigger_event: score_calculated
+  conditions:
+    min_score: 80
+  actions:
+    - type: advance
+    - type: notify
+      users:
+        - recruiter
+  active: true
+  priority: 5
+  times_triggered: 12
+  last_triggered_at: <%= 1.week.ago %>
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= 1.week.ago %>
+
+sla_alert_rule:
+  organization: acme
+  created_by: admin
+  name: Screening SLA Alert
+  description: Alert when candidate in screening for 7+ days
+  rule_type: sla_alert
+  trigger_event: time_elapsed
+  conditions:
+    stage: screening
+    days_in_stage: 7
+  actions:
+    - type: notify
+      users:
+        - recruiter
+        - hiring_manager
+  active: true
+  priority: 1
+  times_triggered: 3
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.month.ago %>
+
+inactive_rule:
+  organization: acme
+  created_by: recruiter
+  name: Old Inactive Rule
+  description: An inactive automation rule
+  rule_type: email_trigger
+  trigger_event: stage_changed
+  conditions:
+    stage: interviewing
+  actions:
+    - type: send_email
+      template: interview_prep
+  active: false
+  priority: 0
+  times_triggered: 100
+  created_at: <%= 6.months.ago %>
+  updated_at: <%= 1.month.ago %>

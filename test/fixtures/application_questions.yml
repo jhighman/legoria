@@ -1,0 +1,61 @@
+# frozen_string_literal: true
+
+text_question:
+  job: open_job
+  question: What interests you most about this role?
+  description: Please provide a brief explanation.
+  question_type: text
+  required: true
+  max_length: 500
+  position: 0
+  placeholder: Enter your response...
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+select_question:
+  job: open_job
+  question: How did you hear about us?
+  question_type: select
+  options:
+    - "LinkedIn"
+    - "Job Board"
+    - "Referral"
+    - "Company Website"
+    - "Other"
+  required: true
+  position: 1
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+yes_no_question:
+  job: open_job
+  question: Are you authorized to work in the United States?
+  question_type: yes_no
+  required: true
+  position: 2
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+optional_question:
+  job: open_job
+  question: Any additional comments?
+  question_type: textarea
+  required: false
+  max_length: 2000
+  position: 3
+  help_text: This is optional but helps us learn more about you.
+  active: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_question:
+  job: open_job
+  question: Old question we no longer use
+  question_type: text
+  position: 99
+  active: false
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 30.days.ago %>

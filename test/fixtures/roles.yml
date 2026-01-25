@@ -1,0 +1,46 @@
+# frozen_string_literal: true
+
+admin:
+  organization: acme
+  name: admin
+  description: Full system access
+  system_role: true
+  permissions: '{"users": ["read", "write", "delete"], "jobs": ["read", "write", "delete"]}'
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+recruiter:
+  organization: acme
+  name: recruiter
+  description: Recruiter role
+  system_role: true
+  permissions: '{"candidates": ["read", "write"], "jobs": ["read"]}'
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+hiring_manager:
+  organization: acme
+  name: hiring_manager
+  description: Hiring manager role
+  system_role: true
+  permissions: '{"candidates": ["read"], "jobs": ["read", "write"]}'
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+interviewer:
+  organization: acme
+  name: interviewer
+  description: Interviewer role
+  system_role: true
+  permissions: '{"candidates": ["read"]}'
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+custom_role:
+  organization: acme
+  name: custom_role
+  description: A custom non-system role
+  system_role: false
+  permissions: '{}'
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

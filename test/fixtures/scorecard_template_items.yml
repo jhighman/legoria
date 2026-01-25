@@ -1,0 +1,53 @@
+# frozen_string_literal: true
+
+communication_item:
+  scorecard_template_section: competencies_section
+  name: Communication Skills
+  item_type: rating
+  guidance: Assess verbal and written communication ability
+  rating_scale: 5
+  position: 0
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+teamwork_item:
+  scorecard_template_section: competencies_section
+  name: Teamwork
+  item_type: rating
+  guidance: Evaluate collaboration and interpersonal skills
+  rating_scale: 5
+  position: 1
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+leadership_question:
+  scorecard_template_section: questions_section
+  name: Tell me about a time you led a project
+  item_type: text
+  guidance: Look for examples of initiative and ownership
+  position: 0
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+culture_fit:
+  scorecard_template_section: overall_section
+  name: Culture Fit
+  item_type: yes_no
+  guidance: Would this person thrive in our culture?
+  position: 0
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+coding_skill:
+  scorecard_template_section: technical_section
+  name: Coding Proficiency
+  item_type: rating
+  rating_scale: 5
+  position: 0
+  required: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

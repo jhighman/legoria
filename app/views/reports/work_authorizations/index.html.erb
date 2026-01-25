@@ -1,0 +1,169 @@
+<% content_for :title, "Work Authorizations Report" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Work Authorizations Report</h1>
+    <p class="text-muted mb-0">Authorization status and expiration tracking</p>
+  </div>
+  <%= render "reports/shared/export_buttons", csv_path: export_reports_work_authorizations_path %>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-md-2">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold text-primary"><%= @data[:summary][:total] %></div>
+        <div class="text-muted small">Total Authorizations</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold text-success"><%= @data[:summary][:indefinite] %></div>
+        <div class="text-muted small">Indefinite</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold text-info"><%= @data[:summary][:temporary] %></div>
+        <div class="text-muted small">Temporary</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card h-100 border-danger">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold text-danger"><%= @data[:summary][:expiring_30_days] %></div>
+        <div class="text-muted small">Expiring 30 Days</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card h-100 border-warning">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold text-warning"><%= @data[:summary][:expiring_60_days] %></div>
+        <div class="text-muted small">Expiring 60 Days</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold text-secondary"><%= @data[:summary][:expiring_90_days] %></div>
+        <div class="text-muted small">Expiring 90 Days</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Type Distribution -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Authorization Types</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Type</th>
+                <th class="text-end">Count</th>
+                <th class="text-end">Indefinite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @data[:by_type].each do |type| %>
+                <tr>
+                  <td><%= type[:type_label] %></td>
+                  <td class="text-end"><%= type[:count] %></td>
+                  <td class="text-end"><%= type[:indefinite_count] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expiration Timeline -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Expiration Timeline (Next 12 Months)</h5>
+      </div>
+      <div class="card-body">
+        <% if @data[:expiration_timeline].any? %>
+          <div data-controller="chart"
+               data-chart-type-value="bar"
+               data-chart-data-value="<%= {
+                 labels: @data[:expiration_timeline].map { |t| t[:label] },
+                 datasets: [{
+                   label: 'Expiring Authorizations',
+                   data: @data[:expiration_timeline].map { |t| t[:expiring_count] },
+                   backgroundColor: '#EF4444'
+                 }]
+               }.to_json %>">
+            <canvas data-chart-target="canvas" height="120"></canvas>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-5">No expiration data available</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Authorizations -->
+<div class="card">
+  <div class="card-header d-flex justify-content-between">
+    <h5 class="card-title mb-0">Recent Authorizations</h5>
+    <%= link_to "View All", admin_work_authorizations_path, class: "btn btn-sm btn-outline-primary" %>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Employee</th>
+          <th>Type</th>
+          <th>Valid Until</th>
+          <th>Days Remaining</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @data[:recent].each do |auth| %>
+          <tr class="<%= 'table-warning' if auth[:days_until_expiration] && auth[:days_until_expiration] <= 30 && !auth[:indefinite] %>">
+            <td><%= auth[:candidate_name] %></td>
+            <td><%= auth[:type] %></td>
+            <td><%= auth[:indefinite] ? "Indefinite" : auth[:valid_until]&.strftime("%b %d, %Y") %></td>
+            <td>
+              <% if auth[:indefinite] %>
+                -
+              <% elsif auth[:days_until_expiration] && auth[:days_until_expiration] > 0 %>
+                <%= auth[:days_until_expiration] %> days
+              <% else %>
+                <span class="text-danger">Expired</span>
+              <% end %>
+            </td>
+            <td>
+              <% if auth[:needs_reverification] %>
+                <span class="badge bg-warning">Needs Reverification</span>
+              <% elsif auth[:indefinite] %>
+                <span class="badge bg-success">Indefinite</span>
+              <% else %>
+                <span class="badge bg-info">Active</span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

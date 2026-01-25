@@ -1,0 +1,23 @@
+<h1>Interview Cancelled</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>We regret to inform you that your scheduled interview for the <strong><%= @job.title %></strong> position at <strong><%= @organization.name %></strong> has been cancelled.</p>
+
+<% if @reason.present? %>
+<p><strong>Reason:</strong> <%= @reason %></p>
+<% end %>
+
+<p>This was originally scheduled for: <strong><%= @interview.scheduled_at_formatted %></strong></p>
+
+<p>We apologize for any inconvenience this may cause. Our recruiting team will be in touch if there are any updates regarding your application.</p>
+
+<p>
+  You can check your application status anytime at:<br>
+  <%= link_to @status_url, @status_url %>
+</p>
+
+<p>Thank you for your understanding.</p>
+
+<p>Best regards,<br>
+The <%= @organization.name %> Recruiting Team</p>

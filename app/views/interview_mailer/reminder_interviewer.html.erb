@@ -1,0 +1,33 @@
+<h1>Interview Starting Soon</h1>
+
+<p>Hi <%= @user.first_name %>,</p>
+
+<p>This is a reminder that your interview with <strong><%= @candidate.full_name %></strong> starts in approximately 1 hour.</p>
+
+<h2>Quick Reference</h2>
+
+<table style="border-collapse: collapse; margin: 20px 0;">
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Candidate:</td>
+    <td style="padding: 8px 0;"><%= @candidate.full_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Position:</td>
+    <td style="padding: 8px 0;"><%= @job.title %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Time:</td>
+    <td style="padding: 8px 0;"><%= @interview.scheduled_at_formatted(format: :time) %></td>
+  </tr>
+  <% if @interview.video_meeting_url.present? %>
+  <tr>
+    <td style="padding: 8px 16px 8px 0; font-weight: bold;">Meeting Link:</td>
+    <td style="padding: 8px 0;"><%= link_to "Join Meeting", @interview.video_meeting_url %></td>
+  </tr>
+  <% end %>
+</table>
+
+<p>Good luck with the interview!</p>
+
+<p>Best regards,<br>
+<%= @organization.name %> Recruiting</p>

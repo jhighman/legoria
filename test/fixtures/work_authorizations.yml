@@ -1,0 +1,38 @@
+# frozen_string_literal: true
+
+citizen:
+  organization: acme
+  candidate: john_doe
+  i9_verification: verified
+  authorization_type: citizen
+  valid_from: <%= 30.days.ago.to_date %>
+  indefinite: true
+  created_at: <%= 30.days.ago %>
+  updated_at: <%= 30.days.ago %>
+
+h1b_active:
+  organization: acme
+  candidate: jane_smith
+  authorization_type: h1b
+  valid_from: <%= 1.year.ago.to_date %>
+  valid_until: <%= 2.years.from_now.to_date %>
+  indefinite: false
+  document_number: "WAC1234567890"
+  issuing_authority: "USCIS"
+  reverification_required: false
+  created_at: <%= 1.year.ago %>
+  updated_at: <%= 1.year.ago %>
+
+ead_expiring_soon:
+  organization: acme
+  candidate: john_doe
+  authorization_type: ead
+  valid_from: <%= 11.months.ago.to_date %>
+  valid_until: <%= 30.days.from_now.to_date %>
+  indefinite: false
+  document_number: "EAD1234567890"
+  issuing_authority: "USCIS"
+  reverification_required: true
+  reverification_due_date: <%= 30.days.from_now.to_date %>
+  created_at: <%= 11.months.ago %>
+  updated_at: <%= Time.current %>

@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+text_response:
+  application: active_application
+  application_question: text_question
+  text_value: I am excited about the opportunity to work on innovative projects.
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+select_response:
+  application: active_application
+  application_question: select_question
+  text_value: LinkedIn
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+yes_no_response:
+  application: active_application
+  application_question: yes_no_question
+  boolean_value: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

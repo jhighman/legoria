@@ -1,0 +1,50 @@
+<h1>I-9 Verification Complete</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>
+  Great news! Your I-9 employment eligibility verification for the
+  <strong><%= @job.title %></strong> position at <strong><%= @organization.name %></strong>
+  has been successfully completed.
+</p>
+
+<h2>Status</h2>
+
+<p style="font-size: 18px; color: #28a745; padding: 10px; background-color: #d4edda; border-radius: 4px;">
+  <strong>Verified</strong>
+</p>
+
+<h2>Verification Details</h2>
+
+<table style="width: 100%; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Position:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @job.title %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Start Date:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @i9_verification&.employee_start_date&.strftime("%B %d, %Y") %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Section 1 Completed:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @i9_verification&.section1_completed_at&.strftime("%B %d, %Y") %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Section 2 Completed:</strong></td>
+    <td style="padding: 8px; border-bottom: 1px solid #eee;"><%= @i9_verification&.section2_completed_at&.strftime("%B %d, %Y") %></td>
+  </tr>
+</table>
+
+<p style="margin-top: 30px;">
+  You are now authorized to work for <%= @organization.name %>. If you have any questions,
+  please contact our HR team.
+</p>
+
+<p>
+  Welcome aboard!
+</p>
+
+<p>
+  Best regards,<br>
+  The <%= @organization.name %> HR Team
+</p>

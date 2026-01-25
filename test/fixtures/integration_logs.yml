@@ -1,0 +1,50 @@
+# SA-11: Integration log fixtures
+
+indeed_sync_success:
+  organization: acme
+  integration: indeed_integration
+  action: sync_jobs
+  status: success
+  direction: outbound
+  records_processed: 5
+  records_created: 2
+  records_updated: 3
+  records_failed: 0
+  duration_ms: 250
+  started_at: <%= 1.hour.ago %>
+  completed_at: <%= 1.hour.ago + 1.second %>
+  created_at: <%= 1.hour.ago %>
+
+indeed_sync_failure:
+  organization: acme
+  integration: indeed_integration
+  action: sync_jobs
+  status: failed
+  direction: outbound
+  error_message: "Connection timeout"
+  started_at: <%= 2.hours.ago %>
+  created_at: <%= 2.hours.ago %>
+
+checkr_submit:
+  organization: acme
+  integration: checkr_integration
+  action: submit_background_check
+  status: success
+  direction: outbound
+  resource_type: BackgroundCheck
+  resource_id: 1
+  external_id: abc123
+  duration_ms: 500
+  started_at: <%= 30.minutes.ago %>
+  completed_at: <%= 30.minutes.ago + 2.seconds %>
+  created_at: <%= 30.minutes.ago %>
+
+token_refresh:
+  organization: acme
+  integration: indeed_integration
+  action: refresh_token
+  status: success
+  direction: outbound
+  started_at: <%= 3.hours.ago %>
+  completed_at: <%= 3.hours.ago + 1.second %>
+  created_at: <%= 3.hours.ago %>

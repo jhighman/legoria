@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+acme_branding:
+  organization: acme
+  primary_color: "#0d6efd"
+  secondary_color: "#6c757d"
+  accent_color: "#0dcaf0"
+  text_color: "#212529"
+  background_color: "#ffffff"
+  font_family: "Inter, system-ui, sans-serif"
+  company_tagline: "Building the future together"
+  about_company: "Acme Corp is a leading technology company."
+  meta_title: "Careers at Acme Corp"
+  meta_description: "Join our team and build amazing products."
+  show_salary_ranges: true
+  show_department_filter: true
+  show_location_filter: true
+  show_employment_type_filter: true
+  enable_job_alerts: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

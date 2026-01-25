@@ -1,0 +1,51 @@
+<h1>I-9 Verification Update</h1>
+
+<p>Dear <%= @candidate.first_name %>,</p>
+
+<p>
+  Your I-9 employment eligibility verification for the <strong><%= @job.title %></strong>
+  position at <strong><%= @organization.name %></strong> has been updated.
+</p>
+
+<h2>Status</h2>
+
+<p style="font-size: 18px; color: #28a745;">
+  <strong>Section 2 Complete</strong>
+</p>
+
+<p>
+  Our HR team has reviewed and verified your identity and employment authorization documents.
+  <% if @i9_verification&.status == "verified" %>
+    Your I-9 verification is now complete.
+  <% else %>
+    We are finalizing your verification and will notify you once complete.
+  <% end %>
+</p>
+
+<h2>What's Next</h2>
+
+<% if @i9_verification&.status == "verified" %>
+  <p>
+    Your employment eligibility has been verified. You're all set to start work on
+    <%= @i9_verification&.employee_start_date&.strftime("%B %d, %Y") %>!
+  </p>
+<% else %>
+  <p>
+    Your verification is being processed. You will receive another notification
+    once it is fully complete.
+  </p>
+<% end %>
+
+<p>
+  If you have any questions about your I-9 verification or onboarding, please
+  contact our HR team.
+</p>
+
+<p>
+  Welcome to the team!
+</p>
+
+<p>
+  Best regards,<br>
+  The <%= @organization.name %> HR Team
+</p>
