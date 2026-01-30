@@ -79,7 +79,8 @@ users = {}
   ) do |u|
     u.first_name = user_attrs[:first_name]
     u.last_name = user_attrs[:last_name]
-    u.encrypted_password = "placeholder" # Will be replaced with proper auth
+    u.password = "password123"
+    u.password_confirmation = "password123"
     u.active = true
     u.confirmed_at = Time.current
   end
@@ -323,7 +324,7 @@ puts "Creating applications..."
 
 # Distribute candidates across open jobs
 open_jobs = jobs.select { |j| j.status == "open" }
-source_types = %w[direct_apply referral job_board agency]
+source_types = %w[career_site job_board referral agency direct linkedin other]
 
 candidates.each_with_index do |candidate, index|
   job = open_jobs[index % open_jobs.length]
@@ -335,7 +336,7 @@ candidates.each_with_index do |candidate, index|
     candidate: candidate
   ) do |a|
     a.current_stage = stage
-    a.status = "active"
+    a.status = "new"
     a.source_type = source_types.sample
     a.applied_at = rand(1..30).days.ago
     a.last_activity_at = rand(0..7).days.ago
