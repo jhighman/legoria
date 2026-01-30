@@ -21,7 +21,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 # Authentication
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
 # Authorization
 gem "pundit", "~> 2.3"
 # State machines for workflow
